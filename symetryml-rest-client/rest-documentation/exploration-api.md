@@ -363,3 +363,52 @@ Response:
 {"statusCode":"OK","statusString":"OK","values":{"densityList":{"values":[{"attrName":"sepal_length","min":4.3,"max":7.9,"width":0.18000000000000002,"histogram":[4.0,5.0,7.0,16.0,9.0,5.0,13.0,14.0,10.0,6.0,10.0,16.0,7.0,11.0,5.0,1.0,4.0,1.0,5.0,1.0]},{"attrName":"sepal_width","min":2.0,"max":4.4,"width":0.12000000000000002,"histogram":[1.0,3.0,4.0,3.0,8.0,14.0,14.0,10.0,26.0,12.0,19.0,12.0,6.0,3.0,9.0,2.0,1.0,1.0,1.0,1.0]},{"attrName":"petal_length","min":1.0,"max":6.9,"width":0.29500000000000004,"histogram":[4.0,33.0,11.0,2.0,0.0,0.0,1.0,2.0,3.0,5.0,12.0,14.0,12.0,17.0,6.0,12.0,7.0,4.0,2.0,3.0]},{"attrName":"petal_width","min":0.1,"max":2.5,"width":0.12,"histogram":[34.0,7.0,7.0,1.0,1.0,0.0,0.0,7.0,3.0,5.0,21.0,12.0,4.0,2.0,17.0,6.0,6.0,3.0,8.0,6.0]},{"attrName":"sepal_lengt_b1","min":0.0,"max":1.0,"width":0.5,"histogram":[67.0,83.0]},{"attrName":"sepal_lengt_b2","min":0.0,"max":1.0,"width":0.5,"histogram":[83.0,67.0]},{"attrName":"sepal_width_b1","min":0.0,"max":1.0,"width":0.5,"histogram":[93.0,57.0]},{"attrName":"sepal_width_b2","min":0.0,"max":1.0,"width":0.5,"histogram":[57.0,93.0]},{"attrName":"petal_length_b1","min":0.0,"max":1.0,"width":0.5,"histogram":[89.0,61.0]},{"attrName":"petal_length_b2","min":0.0,"max":1.0,"width":0.5,"histogram":[61.0,89.0]},{"attrName":"petal_width_b1","min":0.0,"max":1.0,"width":0.5,"histogram":[100.0,50.0]},{"attrName":"petal_width_b2","min":0.0,"max":1.0,"width":0.5,"histogram":[50.0,100.0]},{"attrName":"Iris_setosa","min":0.0,"max":1.0,"width":0.5,"histogram":[100.0,50.0]},{"attrName":"Iris_versicolor","min":0.0,"max":1.0,"width":0.5,"histogram":[100.0,50.0]},{"attrName":"Iris_virginica","min":0.0,"max":1.0,"width":0.5,"histogram":[100.0,50.0]}]}}}
 
 ```
+
+## Conditional Density Estimates
+
+This method returns conditional density estimates (histograms) for pairs of attributes in your SymetryML project. It is useful for bivariate analysis with conditional distributions. Histogram building must have been enabled for the project before invoking this endpoint.
+
+### URL
+
+```
+POST /symetry/rest/{cid}/projects/{pid}/conditionalDensityEstimate [body=ExploreContext]
+```
+
+### Query Parameters
+
+| Parameter    | Required / Optional | Default | Description                                              |
+| ------------ | ------------------- | ------- | -------------------------------------------------------- |
+| **tps**      | Optional            | 10      | Thread pool size for parallel processing                 |
+| **useLocal** | Optional            | -       | If "true", use local project for federated projects      |
+
+### Request Body
+
+The request body is an [ExploreContext](appendix-a-json-data-structure-schema.md#explorecontext-json) containing pairs of attributes. Each [MLContext](appendix-a-json-data-structure-schema.md#mlcontext-json) should specify:
+- The conditional attribute (the attribute to condition on)
+- The target attribute (the attribute for which to compute the conditional density)
+
+### HTTP Responses
+
+| HTTP Status Code | HTTP Status Message | Description                                                                                                                                 |
+| ---------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **200**          | OK                  | Success.                                                                                                                                    |
+| **400**          | BAD REQUEST         | Unknown SymetryML project. `{"statusCode":"BAD_REQUEST","statusString":"Cannot Find SYMETRYML id[r2] for Customer id [c1]","values":{}}` |
+
+### HTTP Response Entity
+
+| HTTP Response Entity                                                     | Example                                                                        |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| [**DensityList**](appendix-a-json-data-structure-schema.md#density-list) | Contains conditional density estimates for each pair of attributes requested.  |
+
+### Sample Request/Response
+
+```
+Request:
+POST url="http://charm:8080/symetry/rest/c1/projects/irisTest/conditionalDensityEstimate?tps=10"
+
+Body:
+{"values":[{"inputAttributeNames":["sepal_length","petal_length"],"inputAttributes":[],"targets":[],"extraParameters":{"hist_bins":"20"}}]}
+
+Response:
+{"statusCode":"OK","statusString":"OK","values":{"densityList":{"values":[{"attrName":"petal_length|sepal_length","min":1.0,"max":6.9,"width":0.295,"histogram":[...]}]}}}
+```
