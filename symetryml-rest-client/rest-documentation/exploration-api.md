@@ -22,10 +22,11 @@ POST /symetry/rest/{cid}/projects/{pid}/explore?metric={_metric_} [body=ExploreC
 
 ### Query Parameters
 
-| Parameter  | Required / Optional | Description                                                                                                                                       |
-| ---------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **metric** | Required            | Metric to use for exploration. For more information, see the section [List of Metrics](exploration-api.md#list-of-metric-query-parameters)        |
-| **async**  | Optional            | If set to true then the exploration will be done asynchronously and the result will be fetched using the [Job API.](symetryml-job-information.md) |
+| Parameter             | Required / Optional | Description                                                                                                                                       |
+| --------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **metric**            | Required            | Metric to use for exploration. For more information, see the section [List of Metrics](exploration-api.md#list-of-metric-query-parameters)        |
+| **async**             | Optional            | If set to true then the exploration will be done asynchronously and the result will be fetched using the [Job API.](symetryml-job-information.md) |
+| **returnProjectInfo** | Optional            | Whether to return project info in the response. Default is `true`.                                                                                |
 
 ### HTTP Responses
 
@@ -325,6 +326,12 @@ This method returns the density estimate / histogram for any `continuous` or `bi
 ```
 POST /symetry/rest/{cid}/projects/{pid}/densityEstimate [body=ExploreContext]
 ```
+
+### Query Parameters
+
+| Parameter    | Required / Optional | Description                                              |
+| ------------ | ------------------- | -------------------------------------------------------- |
+| **useLocal** | Optional            | If "true", use local project for federated projects      |
 
 ### MLContext Parameters for Density Estimates
 
