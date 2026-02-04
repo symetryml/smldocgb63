@@ -763,6 +763,84 @@ Response:
 "{"statusCode":"OK","statusString":"OK","values":{"string":"/* Java Function */\npublic double ldaRed_score(\n\tdouble petal_length,\n\tdouble petal_width,\n\tdouble sepal_width,\n\tdouble petal_length_b1,\n\tdouble sepal_width_b1,\n\tdouble petal_width_b2,\n\tdouble sepal_length)\n{\n\treturn (-8.780458794255027 * petal_length) + \n\t\t(-15.841653689691597 * petal_width) + \n\t\t(2.6264699508510816 * sepal_width) + \n\t\t(-4.283122721819282 * petal_length_b1) + \n\t\t(-1.0747512015680236 * sepal_width_b1) + \n\t\t(58.97284497145444 * petal_width_b2) + \n\t\t(3.4278968694343033 * sepal_length);\n}\n"}}"
 ```
 
+## EVT Wrapper Management
+
+EVT (Extreme Value Theory) Wrappers allow you to add dynamic thresholding capabilities to any existing model. Instead of using a static threshold for anomaly detection, an EVT Wrapper tracks prediction outputs and uses Extreme Value Theory to dynamically determine whether results should be flagged as anomalies.
+
+When an EVT Wrapper is attached to a model, it monitors a specified result key from predictions and automatically applies EVT-based anomaly detection to that value.
+
+### Create EVT Wrapper
+
+Attaches an EVT Wrapper to an existing model for dynamic anomaly thresholding.
+
+#### URL
+
+```
+POST /symetry/rest/{cid}/projects/{pid}/{modelid}/evtwrapper [body=Map]
+```
+
+#### Request Body Parameters
+
+| Parameter | Required / Optional | Description |
+| --------- | ------------------- | ----------- |
+| **sml_evt_wrapper_res_key** | Required | The prediction result key to track for EVT analysis |
+| **sml_evt_wrapper_model_id** | Required | The model ID to associate with the EVT wrapper |
+
+Additional EVT parameters from the [EVT Model MLContext Build Parameters](modeling-api.md#evt-model-mlcontext-build-parameters) section can also be included to configure the EVT behavior.
+
+#### HTTP Responses
+
+| HTTP Status Code | HTTP Status Message | Description |
+| ---------------- | ------------------- | ----------- |
+| **200**          | OK                  | Success. EVT Wrapper created. |
+| **400**          | BAD REQUEST         | Invalid parameters or model not found. |
+
+#### Sample Request/Response
+
+```
+Request:
+POST url="http://charm:8080/symetry/rest/c1/projects/myProject/myModel/evtwrapper"
+
+Body:
+{
+    "sml_evt_wrapper_res_key": "anomaly_score",
+    "sml_evt_wrapper_model_id": "myModel",
+    "evt_warmup_size": "100",
+    "evt_alpha": "0.01",
+    "evt_quantile": "0.95"
+}
+
+Response:
+{"statusCode":"OK","statusString":"EVT Wrapper Created","values":{}}
+```
+
+### Delete EVT Wrapper
+
+Removes an EVT Wrapper from a model.
+
+#### URL
+
+```
+DELETE /symetry/rest/{cid}/projects/{pid}/{modelid}/evtwrapper
+```
+
+#### HTTP Responses
+
+| HTTP Status Code | HTTP Status Message | Description |
+| ---------------- | ------------------- | ----------- |
+| **200**          | OK                  | Success. EVT Wrapper deleted. |
+| **400**          | BAD REQUEST         | Model or EVT Wrapper not found. |
+
+#### Sample Request/Response
+
+```
+Request:
+DELETE url="http://charm:8080/symetry/rest/c1/projects/myProject/myModel/evtwrapper"
+
+Response:
+{"statusCode":"OK","statusString":"EVT Wrapper Deleted","values":{}}
+```
+
 ## Delete a Model
 
 Delete a model from a project

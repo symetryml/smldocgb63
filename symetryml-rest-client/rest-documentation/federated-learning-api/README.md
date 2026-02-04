@@ -46,15 +46,17 @@ Response:
 {"statusCode":"OK","statusString":"OK","values":{"fedInfoEncrypted":"mD3yV8TamG8BsXx/kGGqtnXm+O6njUfyKnH5U86fldQ7Lbsp0t6V5rAM7zhqtMaQsHPodR/5ATf5ovKTlnUSNkWQKkrbaQDR+rHnOymTcyfahXihXoccar67oE+VVYGJDQpDB7IOEVnKKzdFWqBxlHzLzGip0vFGcnfTXR3689oVB5BDbOSvsGkxfjRMoZBJLLVskN4yqmq+kbP5lrP+zuhR5NpTKCrPIe9phIiWlURzHb2RxsI6LHGhySz9iKytesYD4Kdl8iOzfffdx/jPDewreaks2Cx5RFobHPxfuBHYWHzLn2DISlxO+Pemg3Rq0FCZ7Hk9Fexps04yTxkk7S9iBDEWDufCK4cRIEYq1/feytV/Olv2a+OZDlpG38aHyk6uiYzpx22R8DJLoTjBW8Cp/JFgokyYdx29bM2MqlsfUSxIEulbfjoymdtu95PT4YjUelogTctAn9+/xnWiyrET3Fp9VqkCFnXuIdCm5udWspqr7sconMe1rgss5AMPbwqEAcabJR8rGl6zNQX6HgUOaIbKF7PpETMJvlLOby12uY0iljykqaZQNOTd1rjVmDXxxDlC7GcLinPpJE+WOGevGfrvcM71uIbDB1+a7Rz5QKvtW5X9RgL1rZtodXqiwpT1Br+THaKcrBnD45fG7EHBOwPNR4ue+uuvMi+57xLi1ntUIbPBJ7pzRZ09tkUCfh+aQvAbSoThna5Ef6XmTQ\u003d\u003d"}}
 ```
 
-## Federated Learning: Get Encrypted Federation Info
+## Federated Learning: Get Federation Invitation
 
 This Rest endpoint is used in order to get 'an invite' to join the federation by the administrator of the federation. The body of the request contain the password to use to encrypt the resulting `encryptedGroupInfo` can then be shared with another peer so that they can join. Please note that `encryptedGroupInfo` can only be used 1 time. For each peer that want to join the federation a unique `encryptedGroupInfo` needs to be generated.
 
 ### URL
 
 ```
-POST /symetry/rest/{cid}/fedml/{pid}/getEncrypted
+POST /symetry/rest/{cid}/fedml/{pid}/getInvitation
 ```
+
+**Note:** The legacy endpoint `POST /symetry/rest/{cid}/fedml/{pid}/getEncrypted` is also available for backward compatibility.
 
 ### HTTP Response Entity Key.
 
@@ -228,29 +230,33 @@ GET /symetry/rest/{cid}/fedml/{pid}/setExplorePeers
 | ---------------- | ------------------- | ----------- |
 | **200**          | OK                  | Success.    |
 
-## Validate PSR Contract
+## Validate Contract
 
-Allows to Validate a PSR Contract. See the [PSR Contract section](../about-federated-learning.md#psr-contracts) for additional information. The body of the request is a [StringList](../appendix-a-json-data-structure-schema.md#stringlist) which contains a list of business rule to be enforced.
+Validates contract rules against the project schema before applying them. See the [PSR Contract section](../about-federated-learning.md#psr-contracts) for additional information. The body of the request is a [StringList](../appendix-a-json-data-structure-schema.md#stringlist) which contains a list of business rules to be enforced.
 
 ### URL
 
 ```
-POST /symetry/rest/{cid}/fedml/{pid}/psrContractValidate [body=StringList]
+POST /symetry/rest/{cid}/fedml/{pid}/contractValidate [body=StringList]
 ```
+
+**Note:** The legacy endpoint `POST /symetry/rest/{cid}/fedml/{pid}/psrContractValidate` is also available for backward compatibility.
 
 ### HTTP Responses
 
 <table><thead><tr><th width="205">HTTP Status Code</th><th width="223">HTTP Status Message</th><th>Description</th></tr></thead><tbody><tr><td><strong>200</strong></td><td>OK</td><td>Success.</td></tr></tbody></table>
 
-## Update PSR Contract
+## Add Contract
 
-Update the PSR Contract in a federation. Only the federation admin can invoke this REST endpoint. See the [PSR Contract section](../about-federated-learning.md#psr-contracts) for additional information. The body of the request is a [StringList](../appendix-a-json-data-structure-schema.md#stringlist) which contains a list of business rule to be enforced. Please note that the PSR Contract is not validated, so care must be taken to invoke [Validate PSR Contract ](./#validate-psr-contract)first.
+Adds a contract to a federated project to define data sharing rules. Only the federation admin can invoke this REST endpoint. See the [PSR Contract section](../about-federated-learning.md#psr-contracts) for additional information. The body of the request is a [StringList](../appendix-a-json-data-structure-schema.md#stringlist) which contains a list of business rules to be enforced. Please note that the contract is not validated automatically, so care must be taken to invoke [Validate Contract](./#validate-contract) first.
 
 ### URL
 
 ```
-POST /symetry/rest/{cid}/fedml/{pid}/addPsrContract [body=StringList]
+POST /symetry/rest/{cid}/fedml/{pid}/addContract [body=StringList]
 ```
+
+**Note:** The legacy endpoint `POST /symetry/rest/{cid}/fedml/{pid}/addPsrContract` is also available for backward compatibility.
 
 ### HTTP Responses
 
@@ -260,7 +266,7 @@ POST /symetry/rest/{cid}/fedml/{pid}/addPsrContract [body=StringList]
 
 ### HTTP Response Entity
 
-The response is a String entity. If the PSR Contract is not valid, It will contains a description of the error in the PSR contract&#x20;
+The response is a String entity. If the contract is not valid, it will contain a description of the error in the contract.
 
 ## Federated Learning: Get Error Log
 
