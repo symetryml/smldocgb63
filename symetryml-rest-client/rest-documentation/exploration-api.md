@@ -88,6 +88,16 @@ Its possible to perform _variations_ on ztest, ftest, ttest, anova, and chi-squa
 | **Chi square** Determine the association between binary features.                        | \*`inputAttributes`: contains 2 or more binary attribute ids \* `targets`: contains 2 or more binary attribute ids see [Chi Square](exploration-api.md#sample-request-response-chi2-example-1) for example. |
 | **Chi square** Determine the association between binary features based on category names | `inputAttributes`: list of category name See [Chi Square](exploration-api.md#sample-request-response-chi2-example-2) for example.                                                                           |
 
+### MLContext Extra Parameters for Bivariate Statistics
+
+When using the `bi` metric, the following extra parameters can be included in the [MLContext](appendix-a-json-data-structure-schema.md#mlcontext-json) `extraParameters` field to request additional conditional statistics:
+
+| Parameter                    | Type    | Description                                                     |
+| ---------------------------- | ------- | --------------------------------------------------------------- |
+| **need_bi_conditional**      | Boolean | Request bivariate conditional statistics                        |
+| **need_bi_conditional_mmm**  | Boolean | Request conditional min, max, and median values                 |
+| **need_bi_conditional_ci95** | Boolean | Request conditional 95% confidence interval bounds              |
+
 ### Sample Request/Response Bivariate Statistics
 
 ```
