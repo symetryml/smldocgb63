@@ -103,6 +103,8 @@ The body of the request consist of a key/value map. It is optional and depends o
 | **sml\_project\_autosave**               | boolean | Default is **true**. This parameter controls whether or not a project is automatically saved after new data is pushed into it. The default behavior is **true**. If **false** is used, it is important to invoke the [Save](symetryml-projects-rest-api.md#saving-a-symetryml-project) endpoint to persist the project in order to not lose information between server restart.                                                                                                                                                                                                                                                                                                                                                                                                                |
 | **sml\_project\_learn\_merge**           | boolean | <p>Default is <strong>false</strong>. This parameter is used whenever a project learns new data, see <a href="symetryml-projects-rest-api.md#learn-new-data-incremental-update">Update</a> for details. This configuration allows to <code>commit</code> new data to a project only if the whole <a href="appendix-a-json-data-structure-schema.md#dataframe-json">DataFrame</a> was processed without an error. Whenever new data is pushed to a SymetryML project the following happens:<br></p><p>1. A new temporary project is created<br>2. The new temporary project is updated with the the data.<br>3. If no problem is encountered the temporary project is merged with the main project.<br>4. This allows a <strong>commit all or nothing</strong> approach to processing data.</p> |
 | **sml\_project\_predicate\_row\_filter** | String  | Default is empty. This parameter allows to filter data as it is consumed by the project. Please consult the ['Row Filtering' section](symetryml-projects-rest-api.md#about-data-filtering) for more details.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **sml\_project\_rolling\_window\_size** | Integer | Size of the rolling window. When specified, the project will only retain statistics from the most recent N rows of data that were learned. This is useful for scenarios where you want the model to adapt to recent data patterns.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| **sml\_project\_rolling\_window\_use\_embedded** | boolean | Default is **false**. When set to **true**, creates an embedded SymetryML project inside the main project to handle the rolling window. The embedded project can be referenced in the [Drift Detection API](symetryml-projects-rest-api.md#drift-detection) using the special value `rolling_window_embedded_project` as the analysis project name.                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
 The following table list mandatory parameters for sequence, partitioned and multi-gpus projects:
 
@@ -188,6 +190,19 @@ Request Body:
 
 Response:
 {"statusCode":"CREATED","statusString":"Project Created with id:CRITEO","values":{}}
+```
+
+### Sample Request/Response Rolling Window Projects
+
+```
+Request:
+POST url=http://charm:8080/symetry/rest/c1/projects?pid=sensorData&type=cpu
+
+Request Body:
+{"sml_project_rolling_window_size":"10000","sml_project_rolling_window_use_embedded":"true"}
+
+Response:
+{"statusCode":"CREATED","statusString":"Project Created with id:sensorData","values":{}}
 ```
 
 ## Saving a SymetryML Project
