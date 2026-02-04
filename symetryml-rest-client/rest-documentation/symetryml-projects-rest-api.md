@@ -670,12 +670,12 @@ POST /symetry/rest/{cid}/projects/dataDrift [body=MLContext]
 
 The following drift metrics are supported:
 
-| Metric                     | Description                                      |
-| -------------------------- | ------------------------------------------------ |
-| **PCARECONSTRUCTIONERROR** | PCA reconstruction error based drift detection   |
-| **GLOBAL**                 | Global drift score across all attributes         |
-| **MARGINAL_STAT**          | Marginal drift using statistical methods         |
-| **MARGINAL_NON_STAT**      | Marginal drift using non-statistical methods     |
+| Metric                       | Description                                      |
+| ---------------------------- | ------------------------------------------------ |
+| **pca_reconstruction_error** | PCA reconstruction error based drift detection   |
+| **global**                   | Global drift score across all attributes         |
+| **marginal_stat**            | Marginal drift using statistical methods         |
+| **marginal_non_stat**        | Marginal drift using non-statistical methods     |
 
 ### Request Body
 
@@ -684,7 +684,7 @@ The request body is an [MLContext](appendix-a-json-data-structure-schema.md#mlco
 | Parameter                      | Required / Optional | Description                                                                                                                                     |
 | ------------------------------ | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | **driftPreferenceProjectName** | Required            | Name of the baseline/reference project to compare against                                                                                       |
-| **driftAnalysisProjectName**   | Required            | Name of the analysis project, or `"ROLLING_WINDOW_EMBEDDED_PROJECT"` to use the embedded rolling window project from the preference project    |
+| **driftAnalysisProjectName**   | Required            | Name of the analysis project, or `"rolling_window_embedded_project"` to use the embedded rolling window project from the preference project    |
 | **driftMetric**                | Required            | One of the drift metrics listed above                                                                                                           |
 | **inputAttributeNames**        | Optional            | List of specific attribute names to analyze. If not provided, all attributes are analyzed                                                       |
 
@@ -708,7 +708,7 @@ Request:
 POST url="http://charm:8080/symetry/rest/c1/projects/dataDrift"
 
 Body:
-{"inputAttributeNames":["sepal_length","sepal_width","petal_length"],"extraParameters":{"driftPreferenceProjectName":"irisBaseline","driftAnalysisProjectName":"irisProduction","driftMetric":"GLOBAL"}}
+{"inputAttributeNames":["sepal_length","sepal_width","petal_length"],"extraParameters":{"driftPreferenceProjectName":"irisBaseline","driftAnalysisProjectName":"irisProduction","driftMetric":"global"}}
 
 Response:
 {"statusCode":"OK","statusString":"OK","values":{"KSVDMap":{"values":[{"driftScore":0.0523,"sepal_length_drift":0.0412,"sepal_width_drift":0.0634,"petal_length_drift":0.0523}]}}}
@@ -716,12 +716,12 @@ Response:
 
 ### Using with Rolling Window Projects
 
-For projects configured with rolling windows, you can compare the main project against its embedded rolling window project by specifying `"ROLLING_WINDOW_EMBEDDED_PROJECT"` as the `driftAnalysisProjectName`. This allows monitoring drift between historical data and recent data within the same project.
+For projects configured with rolling windows, you can compare the main project against its embedded rolling window project by specifying `"rolling_window_embedded_project"` as the `driftAnalysisProjectName`. This allows monitoring drift between historical data and recent data within the same project.
 
 ```
 Request:
 POST url="http://charm:8080/symetry/rest/c1/projects/dataDrift"
 
 Body:
-{"inputAttributeNames":[],"extraParameters":{"driftPreferenceProjectName":"irisProject","driftAnalysisProjectName":"ROLLING_WINDOW_EMBEDDED_PROJECT","driftMetric":"MARGINAL_STAT"}}
+{"inputAttributeNames":[],"extraParameters":{"driftPreferenceProjectName":"irisProject","driftAnalysisProjectName":"rolling_window_embedded_project","driftMetric":"marginal_stat"}}
 ```
