@@ -655,3 +655,73 @@ None
 ### Sample Request/Response
 
 See the sample in the previous [section](symetryml-projects-rest-api.md#sample-request-response-3).
+
+## Data Drift Detection
+
+This REST endpoint detects data drift between a baseline (preference) project and an analysis project. Data drift detection is useful for monitoring model performance degradation over time by comparing the statistical properties of production data against training or validation data.
+
+### URL
+
+```
+POST /symetry/rest/{cid}/projects/dataDrift [body=MLContext]
+```
+
+### Drift Metrics
+
+The following drift metrics are supported:
+
+| Metric                     | Description                                      |
+| -------------------------- | ------------------------------------------------ |
+| **PCARECONSTRUCTIONERROR** | PCA reconstruction error based drift detection   |
+| **GLOBAL**                 | Global drift score across all attributes         |
+| **MARGINAL_STAT**          | Marginal drift using statistical methods         |
+| **MARGINAL_NON_STAT**      | Marginal drift using non-statistical methods     |
+
+### Request Body
+
+The request body is an [MLContext](appendix-a-json-data-structure-schema.md#mlcontext-json) containing the following parameters in `extraParameters`:
+
+| Parameter                      | Required / Optional | Description                                                                                                                                     |
+| ------------------------------ | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **driftPreferenceProjectName** | Required            | Name of the baseline/reference project to compare against                                                                                       |
+| **driftAnalysisProjectName**   | Required            | Name of the analysis project, or `"ROLLING_WINDOW_EMBEDDED_PROJECT"` to use the embedded rolling window project from the preference project    |
+| **driftMetric**                | Required            | One of the drift metrics listed above                                                                                                           |
+| **inputAttributeNames**        | Optional            | List of specific attribute names to analyze. If not provided, all attributes are analyzed                                                       |
+
+### HTTP Responses
+
+| HTTP Status Code | HTTP Status Message | Description                                                                                                                                 |
+| ---------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **200**          | OK                  | Success.                                                                                                                                    |
+| **400**          | BAD REQUEST         | Unknown project or invalid parameters. `{"statusCode":"BAD_REQUEST","statusString":"Cannot Find SYMETRYML id[r2] for Customer id [c1]","values":{}}` |
+
+### HTTP Response Entity
+
+| HTTP Response Entity                                            | Description                                    |
+| --------------------------------------------------------------- | ---------------------------------------------- |
+| [**KSVDMap**](appendix-a-json-data-structure-schema.md#ksvdmap) | Contains drift scores for the analyzed data.   |
+
+### Sample Request/Response
+
+```
+Request:
+POST url="http://charm:8080/symetry/rest/c1/projects/dataDrift"
+
+Body:
+{"inputAttributeNames":["sepal_length","sepal_width","petal_length"],"extraParameters":{"driftPreferenceProjectName":"irisBaseline","driftAnalysisProjectName":"irisProduction","driftMetric":"GLOBAL"}}
+
+Response:
+{"statusCode":"OK","statusString":"OK","values":{"KSVDMap":{"values":[{"driftScore":0.0523,"sepal_length_drift":0.0412,"sepal_width_drift":0.0634,"petal_length_drift":0.0523}]}}}
+```
+
+### Using with Rolling Window Projects
+
+For projects configured with rolling windows, you can compare the main project against its embedded rolling window project by specifying `"ROLLING_WINDOW_EMBEDDED_PROJECT"` as the `driftAnalysisProjectName`. This allows monitoring drift between historical data and recent data within the same project.
+
+```
+Request:
+POST url="http://charm:8080/symetry/rest/c1/projects/dataDrift"
+
+Body:
+{"inputAttributeNames":[],"extraParameters":{"driftPreferenceProjectName":"irisProject","driftAnalysisProjectName":"ROLLING_WINDOW_EMBEDDED_PROJECT","driftMetric":"MARGINAL_STAT"}}
+```
