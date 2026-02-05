@@ -26,6 +26,33 @@ SymetryML **Select Model** is a feature selection functionality. It allows to au
 | **selector\_type\_genetic** | **(Experimental)** Genetic Algorithm feature selector. Uses evolutionary optimization to find optimal feature subsets. See [Genetic Algorithm Selector](#genetic-algorithm-selector-experimental) section. |
 | **selector\_type\_bayesian** | **(Experimental)** Bayesian Optimization feature selector. Uses probabilistic modeling to efficiently search the feature space. See [Bayesian Optimization Selector](#bayesian-optimization-selector-experimental) section. |
 
+### Feature Pre-filtering with MRMR
+
+MRMR (Minimum Redundancy Maximum Relevance) is a feature pre-filtering technique that selects features with maximum relevance to the target while minimizing redundancy between features. This reduces the initial feature space before applying the main selector, improving efficiency and reducing multicollinearity.
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| **use\_mrmr\_filter** | Boolean | Enable MRMR pre-filtering. Can be combined with any selector type. |
+
+### Sample Request with MRMR Filter
+
+```
+Request:
+POST url="/symetry/rest/c1/projects/p1/selectModel/test_data.csv?algo=lda&modelid=lda_mrmr
+
+Body:
+{
+    "targets":[],
+    "inputAttributes":[],
+    "inputAttributeNames":["attr1","attr2","attr3","attr4","attr5","attr6","attr7","attr8"],
+    "targetAttributeNames":["target"],
+    "extraParameters":{
+        "selector_type":"selector_type_fw_bw",
+        "use_mrmr_filter":"true"
+    }
+}
+```
+
 ### Selector Grid
 
 Elastic Net model has 2 hyper parameters that can be optimized _eta_ and _lambda_. The auto-select algorithm will try various combinations of these parameters using a grid search. The size of this grid can be controlled via the `autoselect_grid_type` extra parameter in the [MLContext](appendix-a-json-data-structure-schema.md#mlcontext-json) request body. Please see this [section](auto-select-with-symetryml.md#sample-request-response-regression-1) for such an example.
@@ -61,6 +88,7 @@ POST /symetry/rest/{cid}/projects/{pid}/selectModel/{dsid} [body=MLContext]
 | **rnd\_seed**              | Optional            | Integer | Set the seed of the randomizer                                                                                                                                                                                    |
 | **selector\_type**         | Optional            | String  | Default is **selector\_type\_fw\_bw**. Please see [Selector Heuristic](select-model-with-symetryml.md#select-heuristic) and [Selector Types](select-model-with-symetryml.md#selector-types) sections for details. |
 | **autoselect\_grid\_type** | Optional            | String  | Default is **autoselect\_grid\_type\_tiny**. Please see [Selector Grid Table](select-model-with-symetryml.md#selector-grid) for details.                                                                          |
+| **use\_mrmr\_filter**      | Optional            | Boolean | Enable MRMR pre-filtering to reduce feature space. See [Feature Pre-filtering with MRMR](select-model-with-symetryml.md#feature-pre-filtering-with-mrmr) for details.                                            |
 
 ### HTTP Responses
 
@@ -126,6 +154,7 @@ POST /symetry/rest/{cid}/projects/{pid}/selectModel [body=Map{"dataframe"=DataFr
 | **rnd\_seed**              | Optional            | Integer | Set the seed of the randomizer                                                                                                                                                                                    |
 | **selector\_type**         | Optional            | String  | Default is **selector\_type\_fw\_bw**. Please see [Selector Heuristic](select-model-with-symetryml.md#select-heuristic) and [Selector Types](select-model-with-symetryml.md#selector-types) sections for details. |
 | **autoselect\_grid\_type** | Optional            | String  | Default is **autoselect\_grid\_type\_tiny**. Please see [Selector Grid Table](select-model-with-symetryml.md#selector-grid) for details.                                                                          |
+| **use\_mrmr\_filter**      | Optional            | Boolean | Enable MRMR pre-filtering to reduce feature space. See [Feature Pre-filtering with MRMR](select-model-with-symetryml.md#feature-pre-filtering-with-mrmr) for details.                                            |
 
 ### HTTP Responses
 
