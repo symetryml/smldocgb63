@@ -185,6 +185,8 @@ KSVSMap
 
 This REST endpoint allows for the request of the principal component analysis (PCA) of a set of attributes.
 
+> **Note:** PCA results are limited to a maximum of **100 dimensions** by default to avoid excessively large response bodies. This limit can be configured using the `pcaNumDimension` parameter in the request body (see below), but the maximum number of Eigen values/vectors returned will not exceed 100.
+
 This API function is asynchronous. If it succeeds, it returns a 202 response, along with a Location header that specifies the job URL. For more information about SymetryML asynchronous job please refer the section on [Symetry Job](symetryml-job-information.md).
 
 ### URL
