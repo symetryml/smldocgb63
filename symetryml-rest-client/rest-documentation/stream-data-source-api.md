@@ -39,11 +39,17 @@ To use a NATS stream data source, create a JSON data structure described in [DSI
 
 | Key                            | Required / Optional | Description                                                                                                                                                                 |
 | ------------------------------ | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **nats_hosts**                 | Required            | NATS server URL(s) to connect to. For example: `nats://localhost:4222`. Multiple hosts can be specified as a comma-separated list.                                         |
 | **nats.subject**               | Required            | NATS subject to subscribe to. The subject determines which messages the stream will receive.                                                                                |
-| **bootstrap.servers**          | Required            | NATS server URL(s) to connect to. For example: `nats://localhost:4222`                                                                                                      |
 | **data.format**                | Required            | Format of the data in the NATS messages. Supported values: `json`, `csv`, or `protobuf`                                                                                     |
 | **protobuf.schema**            | Required (protobuf) | Protobuf schema definition. Required only when `data.format` is set to `protobuf`.                                                                                          |
 | **protobuf.msg.type.name**     | Required (protobuf) | Protobuf message type name to deserialize. Required only when `data.format` is set to `protobuf`.                                                                           |
+| **nats_sec_user**              | Optional            | Username for NATS authentication. Use for user/password authentication.                                                                                                      |
+| **nats_sec_passwd**            | Optional            | Password for NATS authentication. Use in combination with `nats_sec_user`.                                                                                                   |
+| **nats_sec_token**             | Optional            | Token for NATS authentication. Use for token-based authentication.                                                                                                           |
+| **nats_sec_nkey_seed**         | Optional            | NKey seed for NATS authentication. Use for NKey-based authentication.                                                                                                        |
+| **nats_req_timeout**           | Optional            | Request timeout in seconds. Default is `30` seconds.                                                                                                                         |
+| **nats_stream_max_memory**     | Optional            | Maximum memory (in bytes) for the NATS stream buffer. Default is `1073741824` (1 GB).                                                                                       |
 
 ### NATS Data Formats
 
@@ -60,8 +66,8 @@ NATS streams support three data formats:
   "type": "nats",
   "name": "my-nats-stream",
   "info": {
+    "nats_hosts": "nats://localhost:4222",
     "nats.subject": "sensor.data",
-    "bootstrap.servers": "nats://localhost:4222",
     "data.format": "json"
   }
 }
@@ -74,8 +80,8 @@ NATS streams support three data formats:
   "type": "nats",
   "name": "my-protobuf-stream",
   "info": {
+    "nats_hosts": "nats://nats-server:4222",
     "nats.subject": "telemetry.metrics",
-    "bootstrap.servers": "nats://nats-server:4222",
     "data.format": "protobuf",
     "protobuf.schema": "syntax = \"proto3\"; message Metrics { double temperature = 1; double pressure = 2; }",
     "protobuf.msg.type.name": "Metrics"
