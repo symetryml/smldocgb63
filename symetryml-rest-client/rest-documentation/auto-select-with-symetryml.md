@@ -135,5 +135,29 @@ This example uses:
 * specify the grid search: `"autoselect_grid_type":"autoselect_grid_type_small"`
 
 ```
-TBD
+Request:
+POST url="/symetry/rest/c1/projects/p1/autoSelect?task=regression&modelid=autoSelectModelReg1
+
+Body:
+{
+    "mlcontext" : {
+        "targets":[],
+        "inputAttributes":[],
+        "inputAttributeNames":["sepal_width","petal_length","petal_width","sepal_lengt_b1","sepal_lengt_b2","sepal_width_b1","sepal_width_b2","petal_length_b1","petal_length_b2","petal_width_b1","petal_width_b2","Iris_setosa","Iris_versicolor","Iris_virginica"],
+        "targetAttributeNames":["sepal_length"],
+        "extraParameters":{"rnd_seed":"1","selector_type":"selector_type_fw_bw","autoselect_grid_type":"autoselect_grid_type_small"}}
+    "dataframe" : {
+        "attributeNames":["sepal_length","sepal_width","petal_length","petal_width","sepal_lengt_b1","sepal_lengt_b2","sepal_width_b1","sepal_width_b2","petal_length_b1","petal_length_b2","petal_width_b1","petal_width_b2","Iris_setosa","Iris_versicolor","Iris_virginica"],
+        "attributeTypes":["C","C","C","C","B","B","B","B","B","B","B","B","B","B","B"]
+        "data":[
+            ["4.3","3","1.1","0.1","1","0","0","1","1","0","1","0","1","0","0"],
+            ["4.8","3","1.4","0.1","1","0","0","1","1","0","1","0","1","0","0"],
+            ["4.9","3.1","1.5","0.1","1","0","0","1","1","0","1","0","1","0","0"]
+            (...)
+            ["7.2","3.6","6.1","2.5","0","1","0","1","0","1","0","1","0","0","1"]
+        ],
+
+    }
+
+}
 ```

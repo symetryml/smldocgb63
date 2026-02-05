@@ -292,18 +292,9 @@ GET /symetry/rest/{cid}/fedml/{pid}/getErrorLog
 
 ### HTTP Response Entity
 
-| HTTP Response Entity                                                     | Example                                                              |
-| ------------------------------------------------------------------------ | -------------------------------------------------------------------- |
-| [**StringList**](../appendix-a-json-data-structure-schema.md#stringlist) | see [Get Error Log](./#sample-request-response-fed-create-1) example |
-
-### Sample Request/Response Fed Create
-
-```
-GET url="http://charm:8080/symetry/rest/c1/fedml/kkg-node1/getErrorLog"
-
-Response:
-TBD
-```
+| HTTP Response Entity                                                     | Example                                                                         |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| [**StringList**](../appendix-a-json-data-structure-schema.md#stringlist) | see [Get Error Log](./#sample-request-response-fed-create-bad-s3-bucket) example |
 
 ## Clear Federation Error Log
 
@@ -370,9 +361,36 @@ GET /symetry/rest/{cid}/fedml/{pid}/syncStats
 
 ### HTTP Response Entity
 
-| HTTP Response Entity                                                     | Example |
-| ------------------------------------------------------------------------ | ------- |
-| [FedSyncStats](../appendix-a-json-data-structure-schema.md#fedsyncstats) | TBD     |
+| HTTP Response Entity                                                     | Example                                      |
+| ------------------------------------------------------------------------ | -------------------------------------------- |
+| [FedSyncStats](../appendix-a-json-data-structure-schema.md#fedsyncstats) | See [sample response](#sample-request-response-sync-stats) below |
+
+### Sample Request/Response Sync Stats
+
+```
+Request:
+GET url="http://charm:8080/symetry/rest/c1/fedml/fedProject1/syncStats"
+
+Response:
+{
+    "statusCode":"OK",
+    "statusString":"OK",
+    "values":{
+        "fedSyncStats":{
+            "sndCount":15,
+            "sndContractError":2,
+            "rcvCount":42,
+            "rcvError":3,
+            "rcvContractError":{
+                "peer-node-1":1,
+                "peer-node-3":1
+            },
+            "errorLog":["Contract validation failed: COUNT(fraud_cases) < 500"],
+            "syncLog":["Sync completed successfully at 2025-01-15T10:30:00Z","Sync completed successfully at 2025-01-15T11:30:00Z"]
+        }
+    }
+}
+```
 
 ## Get AWS Info
 
