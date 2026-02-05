@@ -246,7 +246,9 @@ POST /symetry/rest/{cid}/fedml/{pid}/contractValidate [body=StringList]
 
 ### HTTP Responses
 
-<table><thead><tr><th width="205">HTTP Status Code</th><th width="223">HTTP Status Message</th><th>Description</th></tr></thead><tbody><tr><td><strong>200</strong></td><td>OK</td><td>Success.</td></tr></tbody></table>
+| HTTP Status Code | HTTP Status Message | Description |
+| ---------------- | ------------------- | ----------- |
+| **200**          | OK                  | Success.    |
 
 ## Add Contract
 
@@ -262,7 +264,9 @@ POST /symetry/rest/{cid}/fedml/{pid}/addContract [body=StringList]
 
 ### HTTP Responses
 
-<table><thead><tr><th width="205">HTTP Status Code</th><th width="223">HTTP Status Message</th><th>Description</th></tr></thead><tbody><tr><td><strong>200</strong></td><td>OK</td><td>Success.</td></tr></tbody></table>
+| HTTP Status Code | HTTP Status Message | Description |
+| ---------------- | ------------------- | ----------- |
+| **200**          | OK                  | Success.    |
 
 ###
 
@@ -329,7 +333,9 @@ GET /symetry/rest/{cid}/fedml/{pid}/getSyncLog
 
 ### HTTP Responses
 
-<table><thead><tr><th width="394.3333333333333">HTTP Status Code</th><th>HTTP Status Message</th><th>Description</th></tr></thead><tbody><tr><td><strong>200</strong></td><td>OK</td><td>Success.</td></tr></tbody></table>
+| HTTP Status Code | HTTP Status Message | Description |
+| ---------------- | ------------------- | ----------- |
+| **200**          | OK                  | Success.    |
 
 ### HTTP Response Entity
 
@@ -358,7 +364,9 @@ GET /symetry/rest/{cid}/fedml/{pid}/syncStats
 
 ### HTTP Responses
 
-<table><thead><tr><th width="394.3333333333333">HTTP Status Code</th><th>HTTP Status Message</th><th>Description</th></tr></thead><tbody><tr><td><strong>200</strong></td><td>OK</td><td>Success.</td></tr></tbody></table>
+| HTTP Status Code | HTTP Status Message | Description |
+| ---------------- | ------------------- | ----------- |
+| **200**          | OK                  | Success.    |
 
 ### HTTP Response Entity
 
