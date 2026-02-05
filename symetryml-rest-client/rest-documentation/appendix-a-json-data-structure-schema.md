@@ -236,10 +236,10 @@ KSVDMap : {
 ```javascript
 FedSyncStats : {
     "sndCount" : "number",           // # of time this peer tried to sync
-    "sndPSRContratError" : "number", // # of time this peer tried to sync with error
+    "sndContractError" : "number", // # of time this peer tried to sync with contract error
     "rcvCount" : "number",   // # of time we received sync from other peers
     "rcvError" : "number",   // # of time we received sync from other peers with error
-    "rcvPSRContractError" : "object", // keep count of # error by peer id
+    "rcvContractError" : "object", // keep count of # contract errors by peer id
     "errorLog" : "array" {
         "items" : "String" // list of sync error
     }
@@ -486,9 +486,9 @@ FederationInfo : {
     "s3_bucket" : "string",
     "is_pulsing" : "boolean",
     "peersInfo" : "object", // key values hash map<string, string>
-    "psr_contract" : "string", // the psr contract for this federation, if it exists
-    "rcv_error_action" : "string", // psr contract receive error action
-    "snd_error_action" : "string", // psr contract send error action
+    "contract" : "string", // the federation contract for this federation, if it exists
+    "rcv_error_action" : "string", // federation contract receive error action
+    "snd_error_action" : "string", // federation contract send error action
     "fed_use_smpc" : "string", // whether this federation use SMPC or not
     "allow_peers_explore" : boolean // whether this peer allows peer exploration or not
 }

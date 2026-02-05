@@ -6,6 +6,8 @@ Creating a federation starts with a single node, the Administrator of the Federa
 
 For more details on the various topologies available when using federated learning with SymetryML please consult[ Federated Learning Topologies](about-federated-learning-topologies.md) documentation.
 
+> **Version 6.3 Endpoint Updates:** Several REST endpoints have been renamed for clarity in version 6.3 (e.g., `getEncrypted` → `getInvitation`). Legacy endpoint names remain available for backward compatibility.
+
 ## Federated Learning: Create Federation
 
 Please consult the following for details on how to create a federation depending on if you are using \[NATS] (https://www.nats.io) or [AWS](https://aws.amazon.com/) backed federation.
@@ -232,7 +234,7 @@ GET /symetry/rest/{cid}/fedml/{pid}/setExplorePeers
 
 ## Validate Contract
 
-Validates contract rules against the project schema before applying them. See the [PSR Contract section](../about-federated-learning.md#psr-contracts) for additional information. The body of the request is a [StringList](../appendix-a-json-data-structure-schema.md#stringlist) which contains a list of business rules to be enforced.
+Validates contract rules against the project schema before applying them. See the [Federation Contract section](../about-federated-learning.md#federation-contracts) for additional information. The body of the request is a [StringList](../appendix-a-json-data-structure-schema.md#stringlist) which contains a list of business rules to be enforced.
 
 ### URL
 
@@ -248,7 +250,7 @@ POST /symetry/rest/{cid}/fedml/{pid}/contractValidate [body=StringList]
 
 ## Add Contract
 
-Adds a contract to a federated project to define data sharing rules. Only the federation admin can invoke this REST endpoint. See the [PSR Contract section](../about-federated-learning.md#psr-contracts) for additional information. The body of the request is a [StringList](../appendix-a-json-data-structure-schema.md#stringlist) which contains a list of business rules to be enforced. Please note that the contract is not validated automatically, so care must be taken to invoke [Validate Contract](./#validate-contract) first.
+Adds a contract to a federated project to define data sharing rules. Only the federation admin can invoke this REST endpoint. See the [Federation Contract section](../about-federated-learning.md#federation-contracts) for additional information. The body of the request is a [StringList](../appendix-a-json-data-structure-schema.md#stringlist) which contains a list of business rules to be enforced. Please note that the contract is not validated automatically, so care must be taken to invoke [Validate Contract](./#validate-contract) first.
 
 ### URL
 
@@ -346,7 +348,7 @@ Response:
 
 ## Get Federation Sync Statistics
 
-Return information about status of the various synchronization. This is specially useful when using [PSR Contract ](../about-federated-learning.md#psr-contracts)and you want to know if other peers in the federation have PSR contract failure and how many. Please see the [FedSyncStats](../appendix-a-json-data-structure-schema.md#fedsyncstats) data structure for details.
+Return information about status of the various synchronization. This is specially useful when using [Federation Contracts](../about-federated-learning.md#federation-contracts) and you want to know if other peers in the federation have contract validation failures and how many. Please see the [FedSyncStats](../appendix-a-json-data-structure-schema.md#fedsyncstats) data structure for details.
 
 ### URL
 

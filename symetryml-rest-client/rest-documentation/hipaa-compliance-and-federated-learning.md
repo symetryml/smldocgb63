@@ -11,8 +11,8 @@ Please note that it is assumed that the data is Safe Harbor Compliant. In the ab
 Please consult the [section on SMPC](about-federated-learning.md#secure-multi-party-computation-mode) for further details on enabling Secure Multi-Party Computation (SMPC) for your federation.
 
 * When adding a data source to a Hipaa compliant project, one must specify which column(s) uniquely identify a patient. This means that at least one of column of the data source must have an attribute type equals to `'P'` which stands for `TYPE_PATIENT_ID`.
-* When a federation node is syncing with other nodes in the federation it will need to have at least 25 unique patients in the PSR for the sync to be sent.
-* Additional Statistical tests will be performed on each feature between each sync to ensure that no information is leaked. If one of these tests do not pass a node will not send their sync. These tests are protecting against information that a malicious user could possibly compute by comparing the current synchronization PSR with the previous synchronization PSR for a given peer.
+* When a federation node is syncing with other nodes in the federation it will need to have at least 25 unique patients in the DEM for the sync to be sent.
+* Additional Statistical tests will be performed on each feature between each sync to ensure that no information is leaked. If one of these tests do not pass a node will not send their sync. These tests are protecting against information that a malicious user could possibly compute by comparing the current synchronization DEM with the previous synchronization DEM for a given peer.
 
 ### Additional Statistical Tests
 
@@ -52,9 +52,9 @@ $$
 t = \frac{\mu_1 - \mu_2}{\frac{S_1}{\sqrt{n_1}}}.
 $$
 
-The $$t$$-test will ensure that we accept the NULL-hypothesis that the existing population and the PSR update were drawn from populations of the same mean at 95% confidence. Where both variances vanish, the update should only be accepted when $$\mu_1 = \mu_2$$.
+The $$t$$-test will ensure that we accept the NULL-hypothesis that the existing population and the DEM update were drawn from populations of the same mean at 95% confidence. Where both variances vanish, the update should only be accepted when $$\mu_1 = \mu_2$$.
 
-The PSR of both sample 1 and 2 are all is needed to extract the necessary values for $$S_j$$, $$\mu_j$$ and $$n_j$$ regarding a sync.
+The DEM of both sample 1 and 2 are all is needed to extract the necessary values for $$S_j$$, $$\mu_j$$ and $$n_j$$ regarding a sync.
 
 #### Kolmogorov-Smirnov Test
 
@@ -90,11 +90,11 @@ $$
 c(\alpha) = \sqrt{-\ln(\frac{\alpha}{2} ) \cdot \frac{1}{2}}
 $$
 
-The KS-test of the PSR update against the existing population must then be smaller than $$K(0.05, n. m)$$.
+The KS-test of the DEM update against the existing population must then be smaller than $$K(0.05, n. m)$$.
 
 #### Integral Test
 
-Given that $$m \ll n$$ (the update to a PSR will typically contain far fewer records than the existing data it), we cannot expect the KS-statistic to be zero or arbitrarily close to zero, because a step function with $$m < n$$ steps cannot generally perfectly approximate a step function with $$n$$ steps.
+Given that $$m \ll n$$ (the update to a DEM will typically contain far fewer records than the existing data it), we cannot expect the KS-statistic to be zero or arbitrarily close to zero, because a step function with $$m < n$$ steps cannot generally perfectly approximate a step function with $$n$$ steps.
 
 The integral of the difference can in principle become arbitrarily small:
 
@@ -110,11 +110,11 @@ $$
 \begin{array}{rcl} \mbox{if } m \le 10 & \Longrightarrow & I < 0.2 \\ \mbox{if } 11 \le m \le 25 & \Longrightarrow & I < 0.1 \\ \mbox{if } m > 25 & \Longrightarrow & I < 0.05 \end{array}
 $$
 
-The distribution information for the attributes provided along the PSR for $$x$$ and $$x^{'}$$ enable these calculations for the Kolmogorov-Smirnov and Integral tests to be performed by SymetryML.
+The distribution information for the attributes provided along the DEM for $$x$$ and $$x^{'}$$ enable these calculations for the Kolmogorov-Smirnov and Integral tests to be performed by SymetryML.
 
 ## When SMPC is Not Enabled
 
-Before the SMPC protocol is run to exchange all the peer's PSR, a verification will be made to ensure that the resulting PSR would contain at least 25 patients. No additional statistical test will be run.
+Before the SMPC protocol is run to exchange all the peer's DEM, a verification will be made to ensure that the resulting DEM would contain at least 25 patients. No additional statistical test will be run.
 
 ## When Hipaa Compliance is not Needed
 

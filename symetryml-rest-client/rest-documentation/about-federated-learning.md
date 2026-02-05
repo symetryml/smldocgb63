@@ -20,7 +20,7 @@ In order to fully understand the federated learning REST API one needs to unders
 | **Federation**                        | A federation is a set of `nodes` that communicate and share Symetry project information                                                                                                                                                                                                                                                                                                                                             |
 | **Federation Info**                   | Information that describes a federation.                                                                                                                                                                                                                                                                                                                                                                                            |
 | **Federation Admin**                  | The user who creates a federation automatically becomes the federation admin.                                                                                                                                                                                                                                                                                                                                                       |
-| **Federation Contract**               | A set of boolean rules used to enforce quality of individual peer's PSR. Please see the [PSR Contract section](about-federated-learning.md#psr-contracts) for details.                                                                                                                                                                                                                                                              |
+| **Federation Contract**               | A set of boolean rules used to enforce quality of individual peer's data. Please see the [Federation Contract section](about-federated-learning.md#federation-contracts) for details.                                                                                                                                                                                                                                              |
 | **Federation secret key**             | An AES secret key that is used to encrypt communication between peers/nodes of a federation.                                                                                                                                                                                                                                                                                                                                        |
 | **Federation Schedule**               | <p><code>Peers</code> in a <code>federation</code> will send updates to other <code>peers</code> according to a schedule. This schedule is defined by the <code>federation admin</code> when a <code>federation</code> is created. Example of schedule:</p><p>- <strong>m30</strong> : synchronize every 30 mins</p><p>- <strong>h3</strong> : synchronize every 3 hours</p><p>- <strong>d7</strong> : synchronize every 7 days</p> |
 | **scheduled synchronization message** | A periodic message sent by a `peer` to other `peers` in a `federation`. The period is defined by the `federation schedule`.                                                                                                                                                                                                                                                                                                         |
@@ -63,22 +63,22 @@ In order to join a federation one must:
 3. Invoke the rest point to join the federation ([FedJoin](federated-learning-api/#federated-learning-join-a-federation)) with the encrypted message and the password received from the federation admin. This message is also to be encrypted using the user `secret key`.
 4. Upon successful result from step 3, one can now start syncing with other nodes in the federation. This is done by invoking the [Start Pulse](federated-learning-api/#federated-learning-start-pulse-1) rest endpoint.
 
-## PSR Contracts
+## Federation Contracts
 
-As explained previously, SymetryML’s speed in machine learning and real-time capabilities rely on its proprietary statistical representation - the PSR. Once constructed from a new dataset, the PSR allows for two main functionalities:
+SymetryML's federated learning capabilities allow peers to share statistical information without sharing raw data. This shared statistical representation supports:
 
 * supervised and unsupervised machine learning and
 * various exploration APIs.
 
-It turns out that some of these exploration API can be used to enforce quality on the data that peers participating in a federation contribute. Of course, data is never shared directly, only knowledge of this data is shared via the PSR. But this knowledge is sufficient to enforce rules like: "_enforce that at least 40% of the rows with positive cancer are female_" or "_enforce that at least 500 example of fraud is part of this dataset_", etc...
+Some of these exploration APIs can be used to enforce quality on the data that peers participating in a federation contribute. Of course, data is never shared directly, only statistical knowledge of the data is shared. But this knowledge is sufficient to enforce rules like: "_enforce that at least 40% of the rows with positive cancer are female_" or "_enforce that at least 500 example of fraud is part of this dataset_", etc...
 
-This enforcement is done via what we can 'PSR Contract'. A PSR Contract is a list of rules to be enforced on a PSR for it to be validated. These rules are effectively Boolean predicates that evaluate to true or false and for a PSR contract to be validated, all its rules need to evaluate to true.
+This enforcement is done via what we call 'Federation Contracts'. A Federation Contract is a list of rules to be enforced on shared statistical data for it to be validated. These rules are effectively Boolean predicates that evaluate to true or false and for a contract to be validated, all its rules need to evaluate to true.
 
-### PSR Contract Rules
+### Federation Contract Rules
 
-Federation PSR Contracts are defined with the following **Backus-Naur** notation as well as the following table that describes the individual function that can be used in a PSR Contract.
+Federation Contracts are defined with the following **Backus-Naur** notation as well as the following table that describes the individual function that can be used in a Federation Contract.
 
-#### PSR Contract Backus-Naur Notation
+#### Federation Contract Backus-Naur Notation
 
 ```
 RULE_PREDICATE ::= [PredicateRule] [BIN_OP PredicateRule]*
@@ -101,7 +101,7 @@ Compose_Fct ::= PCT_OF_TRUE | PCT_OF_FALSE | NUM_OCCURENCE_WHEN_TRUE | NUM_OCCUR
 
 ```
 
-#### Function That Can Be Used in a PSR Contract
+#### Function That Can Be Used in a Federation Contract
 
 * _**F1** / **F2** means 'Feature 1 type' and 'Feature 2 type'_
 * _**C** means Continuous Type_
@@ -109,9 +109,9 @@ Compose_Fct ::= PCT_OF_TRUE | PCT_OF_FALSE | NUM_OCCURENCE_WHEN_TRUE | NUM_OCCUR
 
 <table><thead><tr><th>Rule</th><th width="66">F1</th><th width="64">F2</th><th>Business Rule Interpretation</th></tr></thead><tbody><tr><td><strong>COUNT</strong></td><td>C|B</td><td> </td><td>How many time a feature was seen</td></tr><tr><td><strong>MEAN</strong></td><td>C|B</td><td> </td><td>The mean value of a features</td></tr><tr><td><strong>STDDEV</strong></td><td>C|B</td><td> </td><td>The standard deviation of a features</td></tr><tr><td><strong>VARIANCE</strong></td><td>C|B</td><td> </td><td>the variance of a feature</td></tr><tr><td><strong>STDDEV_UNBIASED</strong></td><td>C|B</td><td> </td><td>The unbiased standard deviation of a features</td></tr><tr><td><strong>VARIANCE_UNBIASED</strong></td><td>C|B</td><td> </td><td>the unbiased variance of a feature</td></tr><tr><td><strong>COVAR</strong></td><td>C|B</td><td>C|B</td><td>The covariance of 2 features</td></tr><tr><td><strong>LINCORR</strong></td><td>C|B</td><td>C|B</td><td>The linear correlation of 2 features</td></tr><tr><td><strong>COND_STDDEV</strong></td><td>C|B</td><td>B</td><td>Stddev of feature 1 when Feature 2 is '1' or true</td></tr><tr><td><strong>COND_VARIANCE</strong></td><td>C|B</td><td>B</td><td>Variance of feature 1 when Feature 2 is '1' or true</td></tr><tr><td><strong>COND_STDDEV_UNBIASED</strong></td><td>C|B</td><td>B</td><td>Unbiased stddev of feature 1 when Feature 2 is '1' or true</td></tr><tr><td><strong>COND_VARIANCE_UNBIASED</strong></td><td>C|B</td><td>B</td><td>Unbiased variance of feature 1 when Feature 2 is '1' or true</td></tr><tr><td><strong>COMPL_COND_STDDEV</strong></td><td> C|B</td><td>B</td><td>Stddev of feature 1 when Feature 2 is '0' or false</td></tr><tr><td><strong>COMPL_COND_VARIANCE</strong></td><td> C|B</td><td>B</td><td>Variance of feature 1 when Feature 2 is '0' or false</td></tr><tr><td><strong>COMPL_COND_STDDEV_UNBIASED</strong></td><td> C|B</td><td>B</td><td>Unbiased stddev of feature 1 when Feature 2 is '0' or false</td></tr><tr><td><strong>COMPL_COND_VARIANCE_UNBIASED</strong></td><td> C|B</td><td>B</td><td>Unbiased variance of feature 1 when Feature 2 is '0' or false</td></tr><tr><td><strong>PCT_OF_TRUE</strong></td><td>B</td><td>B</td><td>Percentage of occurrence with Feature1 is 1 or true and feature2 is '1' or true</td></tr><tr><td><strong>PCT_OF_FALSE</strong></td><td>B</td><td>B</td><td>Percentage of occurrence with Feature1 is 1 or true and feature2 is '0' or false</td></tr><tr><td><strong>NUM_OCCURENCE_WHEN_TRUE</strong></td><td>B</td><td>B</td><td>Number of occurence when Feature1 is 1 or true and feature2 is '1' or true</td></tr><tr><td><strong>NUM_OCCURENCE_WHEN_FALSE</strong></td><td>B</td><td>B</td><td>Number of occurence when Feature1 is 1 or true and feature2 is '0' or false</td></tr><tr><td><strong>MEAN_WHEN_TRUE</strong></td><td>C</td><td>B</td><td>Mean of feature 1 when Feature 2 is '1' or true</td></tr><tr><td><strong>MEAN_WHEN_FALSE</strong></td><td>C</td><td>B</td><td>Mean of feature 1 when Feature 2 is '0' or false</td></tr></tbody></table>
 
-#### Examples of PSR Contract
+#### Examples of Federation Contract
 
-Here is a small example with the Iris data set. For a PSR Contract to be valid all the rows must evaluate to TRUE.
+Here is a small example with the Iris data set. For a Federation Contract to be valid all the rows must evaluate to TRUE.
 
 ```
 COUNT(sepal_length) >= 150
@@ -131,7 +131,7 @@ COND_STDDEV(sepal_length, Iris_versicolor) >= 50
 COND_VARIANCE(sepal_length, Iris_versicolor) >= 50
 ```
 
-Another example using multiple predicates on each line which is permitted per the [Backus-Naur Notation](about-federated-learning.md#psr-contract-backus-naur-notation):
+Another example using multiple predicates on each line which is permitted per the [Backus-Naur Notation](about-federated-learning.md#federation-contract-backus-naur-notation):
 
 ```
 COUNT(sepal_length) >= 150 AND MEAN(sepal_width) > 3.0
@@ -143,9 +143,9 @@ COVAR(petal_length, petal_width) > 1.28 OR LINCORR(petal_width, petal_length) > 
 COND_STDDEV(sepal_length, Iris_versicolor) >= 50 OR COND_VARIANCE(sepal_length, Iris_versicolor) >= 50
 ```
 
-### PSR Contract Failure Action
+### Federation Contract Failure Action
 
-PSR Contract can be evaluated by each peer at two times: First, when sharing their own PSR with other peers in a federation and second when receive other peer's PSR. It's possible to control what SymetryML does when a validation failure occurs at both these times. This is specified when creating / joining a federation by each individual peers by specifying the following parameters inside the **Federation Key Map Value**, please consult the sections mentioned in [Federated Learning: Creating Federation](federated-learning-api/#federated-learning-create-federation) for details:
+Federation Contracts can be evaluated by each peer at two times: First, when sharing their own statistical data with other peers in a federation and second when receiving other peers' statistical data. It's possible to control what SymetryML does when a validation failure occurs at both these times. This is specified when creating / joining a federation by each individual peer by specifying the following parameters inside the **Federation Key Map Value**, please consult the sections mentioned in [Federated Learning: Creating Federation](federated-learning-api/#federated-learning-create-federation) for details:
 
 | Action Type                        | Action Choice                                                                                                                               |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -154,19 +154,19 @@ PSR Contract can be evaluated by each peer at two times: First, when sharing the
 
 ## Peer Exploration
 
-Another functionality enabled by SymetryML PSR technology is 'peer exploration'. It allows to use SymetryML whole suite of exploration APIs against the PSR of a peer. This can be used to perform various univariate and bivariate comparisons between different peer PSRs without ever seeing the raw data of that peer.&#x20;
+Another functionality enabled by SymetryML federated learning is 'peer exploration'. It allows you to use SymetryML's full suite of exploration APIs against the statistical data of a peer. This can be used to perform various univariate and bivariate comparisons between different peers' data without ever seeing the raw data of that peer.&#x20;
 
 If a particular peer wishes to block such functionality please consult [this section](federated-learning-api/#allows-peer-explore-for-a-given-node) to learn how to disable / enable this functionality.
 
 ## Secure Multi-Party Computation Mode
 
-The PSR allows to share certain summary features of the data without ever sharing the data. However, in order for the PSR not to be invertible - that is not allow for the  reconstruction of the original data from the PSR - it needs to have processed a minimum number of rows.  This minimum threshold depends on the number of attributes and equals the following:
+SymetryML's federated learning allows sharing certain summary features of the data without ever sharing the raw data. However, in order for the shared statistical representation not to be invertible - that is not allow for the reconstruction of the original data - it needs to have processed a minimum number of rows. This minimum threshold depends on the number of attributes and equals the following:
 
 _**Minimum number of rows = Number of Attributes + 5**_
 
-If this minimum is not meet on a given peer at the time of synching then the peer will not share its current PSR with the other nodes in a federation. The same logic appers for incremental synchronization. That is the delta of each sync - or the amount of new data in a PSR since the last synchronization - must follow this rule for the synchronization to be allowed.
+If this minimum is not met on a given peer at the time of syncing then the peer will not share its current statistical data with the other nodes in a federation. The same logic applies for incremental synchronization. That is the delta of each sync - or the amount of new data since the last synchronization - must follow this rule for the synchronization to be allowed.
 
-This can be a limitation for some federations where each peer do not have a lots of data. To circumvent this limitation, it's possible to use secure multi party computation when peers share their PSR. The protocol will only complete if the resulting PSR is not invertible.
+This can be a limitation for some federations where each peer does not have lots of data. To circumvent this limitation, it's possible to use secure multi-party computation when peers share their statistical data. The protocol will only complete if the resulting shared data is not invertible.
 
 Federated Learning with SMPC can be enabled by simply adding a key value pair the **`fed_use_smpc`**`= true` inside the **Federation Key Map Value** when an administrator creates a federation  please consult the sections mentioned in [Federated Learning: Creating Federation](federated-learning-api/#federated-learning-create-federation) for details.
 

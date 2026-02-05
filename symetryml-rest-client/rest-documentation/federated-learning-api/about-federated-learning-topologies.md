@@ -14,20 +14,20 @@ description: >-
 
 ### Decentralized Federated Learning:
 
-In a decentralized federation each peer shares their PSR with all other peers in the federation via a queuing system. Each peer is able to merge all the PSRs received from fellow peers in the federation and create one merged PSR which now contains all the information from the datasets of its fellow peers in the federation. Each peer is then free to do their own independent modelling from the information in their newly created merged PSR.
+In a decentralized federation each peer shares their statistical data with all other peers in the federation via a queuing system. Each peer is able to merge all the statistical datas received from fellow peers in the federation and create one merged statistical data which now contains all the information from the datasets of its fellow peers in the federation. Each peer is then free to do their own independent modelling from the information in their newly created merged statistical data.
 
 In a decentralized network, the administrator is responsible for the following:
 
 * Creating the Federation&#x20;
 * Inviting peers to join the Federation via passwords & authentication information&#x20;
-* Managing the frequency the Federation will routinely ‘sync’ information (PSRs)
+* Managing the frequency the Federation will routinely ‘sync’ information (statistical datas)
   * Frequency sync options : minutes, hours, days
 
 ![figure 1: Decentralized federated learning](<../../../.gitbook/assets/image (1).png>)
 
 ### Centralized Federated Learning
 
-In a centralized federation, the Administrator is the only peer in the federation that receives PSRs from other peers, unlike the decentralized network where all peers in the federation send/receive PSRs to/from one another. In a centralized federation the Administrator is the only peer in the federation that is able to merge all PSRs from participants in the federation to create one merged PSR which now contains all the information from the datasets of its fellow peers in the federation. The Admin node is now able to do all the modelling from the merged PSR as though it had access to all the proprietary datasets of the members of the federation.
+In a centralized federation, the Administrator is the only peer in the federation that receives statistical datas from other peers, unlike the decentralized network where all peers in the federation send/receive statistical datas to/from one another. In a centralized federation the Administrator is the only peer in the federation that is able to merge all statistical datas from participants in the federation to create one merged statistical data which now contains all the information from the datasets of its fellow peers in the federation. The Admin node is now able to do all the modelling from the merged statistical data as though it had access to all the proprietary datasets of the members of the federation.
 
 In a centralized network, the **Administrator** is responsible for the following:
 
@@ -43,7 +43,7 @@ Centralized federated learning is called Fusion project with SymetryML. The Rest
 
 ### Hybrid Federated Learning
 
-A Hybrid Federation allows an Administrator to build a Federated Learning network with combinations of Centralized and Decentralized federated networks. This allows the Administrator to regulate which peers in the Federation have visibility or do not have visibility to fellow peers PSRs. It allows for managing information sharing, and exclusion of sharing, as desired and/or mandated.
+A Hybrid Federation allows an Administrator to build a Federated Learning network with combinations of Centralized and Decentralized federated networks. This allows the Administrator to regulate which peers in the Federation have visibility or do not have visibility to fellow peers statistical datas. It allows for managing information sharing, and exclusion of sharing, as desired and/or mandated.
 
 ![Hybrid Federation: Example of combination of centralized and decentralized networks](<../../../.gitbook/assets/image (3).png>)
 
