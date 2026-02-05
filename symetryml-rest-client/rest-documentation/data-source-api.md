@@ -22,13 +22,17 @@ SymetryML supports various types of data sources:
 * JDBC
 * Local Data Source, that is allows to browse the local file system of the jetty web server with same privileges as the user running the Jetty web server.
 
+{% hint style="info" %}
+**Streaming Data Sources:** For real-time streaming data sources such as Kafka and NATS, please refer to the [Stream Data Source API](stream-data-source-api.md) documentation.
+{% endhint %}
+
 To use a data source, create a JSON data structure described in [DSInfo](appendix-a-json-data-structure-schema.md#dsinfo-json) that contains the fields in table [below](data-source-api.md#required-dsinfo-fields).
 
 ### Required DSInfo Fields
 
 | Field    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **type** | <p><strong>Type of Data Source</strong></p><p>- Secure FTP (SFTP) data source = <strong>sftp</strong></p><p>- HTTP/HTTPS data source = <strong>http</strong></p><p>- Amazon S3 = <strong>s3</strong></p><p>- Oracle OCI Object Storage with S3 Compatibility = <strong>s3oci</strong></p><p>- Google Clound Storage = <strong>gcs</strong></p><p>- Amazon Redshift = <strong>redshift</strong></p><p>- Spark Data Source = please see the <a href="data-source-api.md#spark-map-reduce">Spark Data Source type</a> section for the matrix of all possible data source names involving Spark Processing.</p><p>- Data Source Plug ins. - <strong>jdbc</strong></p><p>- Local file = <strong>localfile</strong></p><p>- Amazon Elastic Map Reduce <strong>= emr</strong></p><p>- Microsoft Azure Blob Storage = <strong>abs</strong></p> |
+| **type** | <p><strong>Type of Data Source</strong></p><p>- Secure FTP (SFTP) data source = <strong>sftp</strong></p><p>- HTTP/HTTPS data source = <strong>http</strong></p><p>- Amazon S3 = <strong>s3</strong></p><p>- Oracle OCI Object Storage with S3 Compatibility = <strong>s3oci</strong></p><p>- Google Clound Storage = <strong>gcs</strong></p><p>- Amazon Redshift = <strong>redshift</strong></p><p>- Spark Data Source = please see the <a href="data-source-api.md#spark-map-reduce">Spark Data Source type</a> section for the matrix of all possible data source names involving Spark Processing.</p><p>- Data Source Plug ins. - <strong>jdbc</strong></p><p>- Local file = <strong>localfile</strong></p><p>- Amazon Elastic Map Reduce <strong>= emr</strong></p><p>- Microsoft Azure Blob Storage = <strong>abs</strong></p><p>- Streaming Data Sources (Kafka, NATS) = <strong>kafka</strong> or <strong>nats</strong> - see <a href="stream-data-source-api.md">Stream Data Source API</a></p> |
 | **name** | Name of the data source.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | **info** | Hash Map Containing Additional Information Based on Data Source. Please consult the [next section](data-source-api.md#additional-information-stored-in-data-source) for details about this field.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
@@ -120,14 +124,16 @@ Please consult [https://docs.oracle.com/en-us/iaas/Content/Object/Tasks/s3compat
 
 **Spark Map Reduce Data Source Type**
 
-Please note that the following matrix of supported version of Spark versus data source as well as how to name the data source for a given combination:
+{% hint style="info" %}
+**SymetryML 6.3.0 and later:** Due to changes in the underlying JDK and Jetty server, only Spark 4.1.0 is supported.
+{% endhint %}
 
-| Data Source              | Spark 2.4.5 hadoop 2.7 | Spark 2.4.6 hadoop 2.7 | Spark 3.0.1 hadoop 2.7 | Spark 3.0.2 hadoop 3.2  |
-| ------------------------ | ---------------------- | ---------------------- | ---------------------- | ----------------------- |
-| **Oracle OCIs3**         | N                      | N                      | N                      | sparkocis3\_mr\_3\_0\_2 |
-| **Amazon S3**            | sparks3\_mr\_2\_4\_5   | sparks3\_mr\_2\_4\_6   | sparks3\_mr\_3\_0\_1   | sparks3\_mr\_3\_0\_2    |
-| **Google Cloud Storage** | sparkgcs\_mr\_2\_4\_5  | sparkgcs\_mr\_2\_4\_6  | sparkgcs\_mr\_3\_0\_1  | sparkgcs\_mr\_3\_0\_2   |
-| **Microsoft Azure Blob** | sparkabs\_mr\_2\_4\_5  | sparkabs\_mr\_2\_4\_6  | sparkabs\_mr\_3\_0\_1  | sparkabs\_mr\_3\_0\_2   |
+| Data Source              | Spark 4.1.0                      |
+| ------------------------ | -------------------------------- |
+| **Oracle OCIs3**         | sparkocis3\_map\_reduce\_4\_1\_0 |
+| **Amazon S3**            | sparks3\_map\_reduce\_4\_1\_0    |
+| **Google Cloud Storage** | sparkgcs\_map\_reduce\_4\_1\_0   |
+| **Microsoft Azure Blob** | sparkabs\_map\_reduce\_4\_1\_0   |
 
 #### JDBC
 

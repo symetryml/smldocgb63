@@ -1,6 +1,6 @@
 # Stream Data Source API
 
-Data source described in the [Data Source API](data-source-api.md) section all are _finite_ type of data source int he sense that they all have a _finite_ number of rows. SymetryML also support _Stream Data Source_ that in theory can contain an infinite number of rows. For now only Kafka Stream Data Source can be created.
+Data source described in the [Data Source API](data-source-api.md) section all are _finite_ type of data source int he sense that they all have a _finite_ number of rows. SymetryML also support _Stream Data Source_ that in theory can contain an infinite number of rows. Currently, both Kafka and NATS Stream Data Sources are supported.
 
 ## Kafka Streams
 
@@ -8,12 +8,12 @@ To use a Kafka stream data source, create a JSON data structure described in [DS
 
 ### Fields Required to Create a Stream DSInfo Data Structure
 
-| Field    | Description                                                                                                                                                                          |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **type** | **Type of Data Source** - Only `Kafka` for now                                                                                                                                       |
-| **name** | Name of the data source.                                                                                                                                                             |
-| **path** | path of the file / entity                                                                                                                                                            |
-| **info** | **Hash Map** Containing Information needed to create a Kafka Stream. Please consult the following [table](stream-data-source-api.md#kafka-stream-additional-information) for details |
+| Field    | Description                                                                                                                                                                                                                                     |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **type** | **Type of Data Source** - `kafka` for Kafka streams or `nats` for NATS streams                                                                                                                                                                 |
+| **name** | Name of the data source.                                                                                                                                                                                                                        |
+| **path** | path of the file / entity                                                                                                                                                                                                                       |
+| **info** | **Hash Map** Containing Information needed to create a Stream. Please consult [Kafka Stream Additional Information](stream-data-source-api.md#kafka-stream-additional-information) or [NATS Stream Additional Information](#nats-stream-additional-information) for details |
 
 ## Kafka Stream Additional Information
 
@@ -28,6 +28,60 @@ To use a Kafka stream data source, create a JSON data structure described in [DS
 | **auto.commit.interval.ms**               | Optional            | Kafka Stream configuration parameter. Default to 1000 ms.                                                                                                                                           |
 | **auto.offset.reset**                     | Optional            | Kafka Stream configuration parameter. Default to _earliest_                                                                                                                                         |
 | **Any other kafka parameter**             | Optional            | Any Kafka parameters can be used as well. One needs to prefix them with `sml.kafka.` e.g. `sml.kafka.client.dns.lookup` or `sml.kafka.fetch.min.bytes`                                              |
+
+## NATS Streams
+
+NATS is a lightweight, high-performance messaging system that provides both publish-subscribe and distributed queueing capabilities. SymetryML can connect to NATS servers to consume streaming data in real-time.
+
+### NATS Stream Additional Information
+
+To use a NATS stream data source, create a JSON data structure described in [DSInfo](appendix-a-json-data-structure-schema.md#dsinfo-json) with `type` set to `nats` and include the following fields in the `info` map:
+
+| Key                            | Required / Optional | Description                                                                                                                                                                 |
+| ------------------------------ | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **nats.subject**               | Required            | NATS subject to subscribe to. The subject determines which messages the stream will receive.                                                                                |
+| **bootstrap.servers**          | Required            | NATS server URL(s) to connect to. For example: `nats://localhost:4222`                                                                                                      |
+| **data.format**                | Required            | Format of the data in the NATS messages. Supported values: `json`, `csv`, or `protobuf`                                                                                     |
+| **protobuf.schema**            | Required (protobuf) | Protobuf schema definition. Required only when `data.format` is set to `protobuf`.                                                                                          |
+| **protobuf.msg.type.name**     | Required (protobuf) | Protobuf message type name to deserialize. Required only when `data.format` is set to `protobuf`.                                                                           |
+
+### NATS Data Formats
+
+NATS streams support three data formats:
+
+1. **JSON** - Messages are expected to be in JSON format with attribute names matching the project schema
+2. **CSV** - Messages are expected to be comma-separated values (or using custom delimiters defined with additional CSV options)
+3. **Protobuf** - Messages are serialized using Protocol Buffers. Requires both `protobuf.schema` and `protobuf.msg.type.name` to be specified
+
+### Example NATS DSInfo (JSON Format)
+
+```json
+{
+  "type": "nats",
+  "name": "my-nats-stream",
+  "info": {
+    "nats.subject": "sensor.data",
+    "bootstrap.servers": "nats://localhost:4222",
+    "data.format": "json"
+  }
+}
+```
+
+### Example NATS DSInfo (Protobuf Format)
+
+```json
+{
+  "type": "nats",
+  "name": "my-protobuf-stream",
+  "info": {
+    "nats.subject": "telemetry.metrics",
+    "bootstrap.servers": "nats://nats-server:4222",
+    "data.format": "protobuf",
+    "protobuf.schema": "syntax = \"proto3\"; message Metrics { double temperature = 1; double pressure = 2; }",
+    "protobuf.msg.type.name": "Metrics"
+  }
+}
+```
 
 ## Stream Data Source Encryption
 
