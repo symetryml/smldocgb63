@@ -187,11 +187,20 @@ Once you have obtained your SymetryML credentials from the `/smlaccess` endpoint
 
 SSO must be enabled and configured by the SymetryML administrator. Configuration includes:
 
+#### Enabling SSO
+
+To enable SSO functionality, add the following JVM parameter when launching Jetty (in `/opt/jetty/start.ini`):
+
+```
+-Dsym.sso.enable=true
+```
+
 #### General Settings
+
+All SSO configuration parameters listed below must be set in the SymetryML REST Configuration file (`/opt/symetry/symetry-rest.txt`). For more information about SymetryML REST configuration, see the [Installation Guide - SymetryML REST Configuration](../../guides/installation-guide/README.md#symetryml-rest-configuration).
 
 | Setting                                      | Description                                                                      |
 | -------------------------------------------- | -------------------------------------------------------------------------------- |
-| **sym.sso.enable**                           | Enable or disable SSO functionality (set in start.ini)                           |
 | **rtlm.option.sso.authentication.protocol**  | Authentication protocol: `OIDC` or `LDAP`                                        |
 | **rtlm.option.sso.callback.handler.url**     | URL that receives the callback redirect after successful authentication          |
 | **rtlm.option.sso.callback.finish.url**      | URL that receives the redirect after session creation                            |
@@ -200,7 +209,7 @@ SSO must be enabled and configured by the SymetryML administrator. Configuration
 
 #### OIDC-Specific Settings
 
-For OpenID Connect providers (Auth0, AWS Cognito, etc.):
+For OpenID Connect providers (Auth0, AWS Cognito, etc.), add these parameters to `/opt/symetry/symetry-rest.txt`:
 
 | Setting                                            | Description                                                  |
 | -------------------------------------------------- | ------------------------------------------------------------ |
@@ -214,7 +223,7 @@ For OpenID Connect providers (Auth0, AWS Cognito, etc.):
 
 #### LDAP-Specific Settings
 
-For LDAP providers (AWS Simple AD, Active Directory, etc.):
+For LDAP providers (AWS Simple AD, Active Directory, etc.), add these parameters to `/opt/symetry/symetry-rest.txt`:
 
 | Setting                                                      | Description                                            |
 | ------------------------------------------------------------ | ------------------------------------------------------ |
@@ -230,6 +239,12 @@ For LDAP providers (AWS Simple AD, Active Directory, etc.):
 
 ### Example OIDC Configuration (Auth0)
 
+**In `/opt/jetty/start.ini`**, add:
+```properties
+-Dsym.sso.enable=true
+```
+
+**In `/opt/symetry/symetry-rest.txt`**, add:
 ```properties
 rtlm.option.sso.authentication.protocol=OIDC
 rtlm.option.sso.callback.handler.url=https://your-domain.com/sso/sso-callback-redirect.html
@@ -245,6 +260,12 @@ rtlm.option.sso.oidc.user.profile.access.scopes=openid profile email
 
 ### Example LDAP Configuration (AWS Simple AD)
 
+**In `/opt/jetty/start.ini`**, add:
+```properties
+-Dsym.sso.enable=true
+```
+
+**In `/opt/symetry/symetry-rest.txt`**, add:
 ```properties
 rtlm.option.sso.authentication.protocol=LDAP
 rtlm.option.sso.callback.handler.url=/symetry-web/sso-callback.html
