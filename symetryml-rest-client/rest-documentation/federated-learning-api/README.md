@@ -242,8 +242,6 @@ Validates contract rules against the project schema before applying them. See th
 POST /symetry/rest/{cid}/fedml/{pid}/contractValidate [body=StringList]
 ```
 
-**Note:** The legacy endpoint `POST /symetry/rest/{cid}/fedml/{pid}/psrContractValidate` is also available for backward compatibility.
-
 ### HTTP Responses
 
 | HTTP Status Code | HTTP Status Message | Description |
@@ -259,8 +257,6 @@ Adds a contract to a federated project to define data sharing rules. Only the fe
 ```
 POST /symetry/rest/{cid}/fedml/{pid}/addContract [body=StringList]
 ```
-
-**Note:** The legacy endpoint `POST /symetry/rest/{cid}/fedml/{pid}/addPsrContract` is also available for backward compatibility.
 
 ### HTTP Responses
 
