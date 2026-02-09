@@ -5,7 +5,11 @@ Unlike other Data Sources, streams cannot be created independent of a project. T
 * Have an existing SymetryML project
 * Create a new SymetryML project from scratch
 
-In both cases, creating a stream would require you to specify at minimum the following information:
+SymetryML supports two types of streaming data sources: **Kafka** and **NATS**.
+
+## Kafka Streams
+
+Creating a Kafka stream requires you to specify at minimum the following information:
 
 * **Bootstrap Servers**
 * **Schema Registry**
@@ -17,9 +21,9 @@ In both cases, creating a stream would require you to specify at minimum the fol
 
 **Start from Beginning** checkbox would read the earliest possible data from the stream. Unselecting this option would only update the project with the data that will be generated from this point in time.
 
-Advanced Kafka parameters could be enabled specified by clicking the **Kafka Options** button and adding the corresponding parameter/value pair.
+Advanced Kafka parameters could be specified by clicking the **Kafka Options** button and adding the corresponding parameter/value pair.
 
-## Adding a Stream to an existing Project
+### Adding a Kafka Stream to an existing Project
 
 Right-click the project node, and then click **Add Stream**.
 
@@ -37,12 +41,44 @@ Verify the stream in the preview panel. Click **Next** to continue.
 
 In the final panel specify the correct type mapping and click **Finish**
 
+## NATS Streams
+
+NATS is a lightweight, high-performance messaging system. Creating a NATS stream requires you to specify the following information:
+
+| Parameter | Required | Description |
+| --- | --- | --- |
+| **NATS Hosts** | Yes | Comma-separated list of NATS server addresses |
+| **NATS Subject** | Yes | The NATS subject to subscribe to |
+| **Data Format** | Yes | Format of the incoming data: `json`, `csv`, or `protobuf` |
+| **Protobuf Schema** | If protobuf | The Protobuf schema definition (required when Data Format is `protobuf`) |
+| **Protobuf Message Type** | If protobuf | The Protobuf message type name (required when Data Format is `protobuf`) |
+| **Authentication** | No | One of **None**, **User/Password**, **Token**, or **NKey** |
+| **Request Timeout** | No | Timeout in seconds (default: 30) |
+| **Max Memory** | No | Maximum memory for the NATS stream (default: 1GB) |
+
+![NATS Stream Info](../../.gitbook/assets/nats\_stream.png)
+
+**Time btw. Persists** and **Start from Beginning** options function the same as with Kafka streams.
+
+### Adding a NATS Stream to an existing Project
+
+Right-click the project node, and then click **Add Stream**. Select **NATS** as the stream type, then fill in the required parameters listed above.
+
+<!-- TODO: PLACEHOLDER IMAGE - capture NATS stream added to existing project -->
+![NATS Stream w/ Protocol](../../.gitbook/assets/nats\_stream\_protocol.png)
+
+Ensure your information is valid and click **Next**.
+
+Verify the stream in the preview panel. Click **Next** to continue.
+
+In the final panel specify the correct type mapping and click **Finish**.
+
 ## Creating a Project with Stream
 
-When creating a new project, adding a stream can be performed by simply:
+When creating a new project, adding a stream (Kafka or NATS) can be performed by simply:
 
 1. Selecting **New Data Source** on the data selection panel
-2. Specifying the required stream info (bootstrap servers, topic, and etc.)
+2. Specifying the required stream info for your chosen stream type
 
 See [Creating New Project](projects.md#creating-new-projects) for more information.
 
@@ -57,23 +93,23 @@ To stop the update behavior:
 1. Right-click on the stream node
 2. Click **Stop Stream**
 
-While this does stop the project from being updated, it has no effect on the underlying stream. The Kafka Stream will continue to ingest new data in the background.
+While this does stop the project from being updated, it has no effect on the underlying stream. The stream will continue to ingest new data in the background.
 
 Resuming project update behavior can be done in one of two ways:
 
 * A stream can be resumed from the point where it was paused (**Resume Stream**)
 * It can be restarted from the very beginning. (**Start from Beginning**)
 
-The correct restart point will depend on the architecture of your Kafka cluster. If the cluster allows for storage of large volume of data, simply resuming might be the best option. On the other hand, if the data in the cluster is changing rapidly, restarting from the beginning might be more optimal.
+The correct restart point will depend on the architecture of your streaming cluster. If the cluster allows for storage of large volume of data, simply resuming might be the best option. On the other hand, if the data in the cluster is changing rapidly, restarting from the beginning might be more optimal.
 
 ## Stream Metrics
 
-Information about a Kafka Stream can be obtained by right clicking on the stream node and selecting **Stream Metrics**
+Information about a stream can be obtained by right clicking on the stream node and selecting **Stream Metrics**
 
 ![Stream Metrics](../../.gitbook/assets/stream\_metrics.png)
 
 ## Stream Errors
 
-**Error Log** allows the user to diagnose any potential problems that might occur when interfacing with a Kafka Stream. This is the first place you should look when troubleshooting.
+**Error Log** allows the user to diagnose any potential problems that might occur when interfacing with a stream. This is the first place you should look when troubleshooting.
 
 ![Stream Error Log](../../.gitbook/assets/stream\_errors.png)
