@@ -17,7 +17,22 @@ Authentication with the SymetryML application is achieved using a predefined use
 
 ![Login Prompt](../../.gitbook/assets/login\_screen.png)
 
-If this is your first time registering, use the user ID **admin** and user secret key **admin**. Click **Sign In**. The system redirects you to the registration section of SymetryML GUI that will guide you through the registration process. The process of generating these credentials is described in [_SymetryML Admin User Guide_](../../guides/untitled.md).
+If this is your first time registering, use the user ID **admin** and user secret key **admin**. Click **Sign In**. The system redirects you to the registration section of SymetryML GUI that will guide you through the registration process. The process of generating these credentials is described in [_SymetryML Admin User Guide_](../../guides/admin-user-guide.md).
+
+### Single Sign-On (SSO) Authentication
+
+SymetryML also supports Single Sign-On (SSO) authentication, allowing users to authenticate using their organization's existing identity provider. Two protocols are supported:
+
+* **OIDC (OpenID Connect)** -- Compatible with providers such as Auth0, AWS Cognito, Okta, and any OIDC-compliant identity provider.
+* **LDAP** -- Compatible with AWS Simple AD, Active Directory, OpenLDAP, and any LDAP v3 directory service.
+
+When SSO is enabled, the login flow is as follows:
+
+1. The user authenticates through their organization's SSO provider.
+2. Upon successful authentication, SymetryML issues API credentials (`smlusername` and `smlusersecretkey`).
+3. These credentials are then used for standard HMAC-SHA2 authenticated API calls.
+
+> SSO is available in SymetryML 6.2.0 and later. For detailed SSO configuration instructions (including OIDC and LDAP setup parameters), refer to the [SymetryML REST API Security](../../symetryml-rest-client/rest-documentation/symetryml-rest-api-security.md) documentation.
 
 ## SymetryML GUI
 
@@ -67,9 +82,14 @@ For more details on how to create data sources please refer to the [Working with
 
 ## Streams
 
-Streams are a dynamic and constantly changing source of data. Unlike their flat file counterparts, streams do not have an end. SymetryML currently supports Kafka Streams. More information about Kafka streams can be found [here](https://kafka.apache.org). Please also consult the [Working with Streams](streams.md) section of this document.
+Streams are a dynamic and constantly changing source of data. Unlike their flat file counterparts, streams do not have an end. SymetryML supports the following streaming platforms:
 
-Once associated with a particular project, streams enables the project to learn new data as it becomes available in a continuous fashion without user interaction.
+* **Kafka Streams** -- A distributed event streaming platform. More information can be found [here](https://kafka.apache.org).
+* **NATS Streams** -- A lightweight, high-performance messaging system. More information can be found [here](https://nats.io).
+
+Please consult the [Working with Streams](streams.md) section of this document for detailed setup instructions.
+
+Once associated with a particular project, streams enable the project to learn new data as it becomes available in a continuous fashion without user interaction.
 
 ## Symetry Job
 
@@ -179,9 +199,19 @@ After data is added and learned, use SymetryML GUI's explore feature to verify t
 
 **Auto Refresh** functionality will ensure that your SymetryML GUI client will always be synced with the state of the project on the SymetryML Server. This feature can be disabled to improve performance for projects with large number of attributes.
 
-The **Univariate** panel shows the basic statistics for attributes from a particular data source. View this information as a quick sanity check to validate whether SymetryML interpreted the data correctly.
+The **Univariate** panel shows the basic statistics for attributes from a particular data source, including mean, standard deviation, standard error, skewness, and kurtosis. View this information as a quick sanity check to validate whether SymetryML interpreted the data correctly.
 
 ![Univariate Panel](../../.gitbook/assets/sml\_univariate.png)
+
+The **Conditional Univariate** panel allows you to explore univariate statistics conditioned on another attribute. This is useful for understanding how the distribution of one variable changes across the values of another. Conditional univariate statistics include conditional sum, conditional standard deviation, and conditional 95% confidence interval bounds.
+
+To use the Conditional Univariate panel:
+
+1. Click the **Conditional Univariate** tab in the exploration contextual panel.
+2. Select the target attribute and the conditioning attribute.
+3. View the conditional statistics.
+
+![Conditional Univariate Panel](../../.gitbook/assets/sml\_conditional.png)
 
 The **Correlation** panel allows you to perform bivariate analyses on the learned data. This enables you to learn quickly about the degree of associativity between your variables and helps when creating subsequent models. In general, avoid models with highly correlated input variables. For example, if variable A is highly correlated with variable B, choose only one for the final model.
 
@@ -457,6 +487,8 @@ In addition to supplying the out of sample dataset, the user has to choose one o
 | Max Number of Iterations | Randomly create a model by trying a specific number of random number of permutations of the features.                                                                                                                                  |
 | Max. Number of Seconds   | Randomly create a model by trying a random number of permutations of the features for a maximum number of seconds.                                                                                                                     |
 | Simple                   | The simple heuristic starts with one feature and then incrementally adds one additional feature until it tries all the features. It then keeps track of the best model.                                                                |
+| Genetic Algorithm        | **(Experimental)** Uses evolutionary optimization (population-based selection, crossover, and mutation) to search for the optimal feature subset.                                                                                      |
+| Bayesian Optimization    | **(Experimental)** Uses probabilistic surrogate modeling with an Upper Confidence Bound (UCB) acquisition function to efficiently search the feature space.                                                                            |
 
 Once the search heuristic has been chosen, the user can specify the size of the **Search Space**.
 
@@ -492,7 +524,7 @@ For **regression** problems the optimization metrics available are:
 
 After the models are created, they can generate new predictions. Like many SymetryML functions, predictions can be performed through a RESTful API provided by SymetryML REST service or with the SymetryML GUI application.
 
-Version 5.2 of SymetryML also features the option of enabling a Dynamic Imputer when making predictions.
+SymetryML also features the option of enabling a **Dynamic Imputer** when making predictions.
 
 Dynamic Imputer is needed because real world data often times contains missing values. While these missing values are handled gracefully by some machine learning algorithms, others require all values to be present in order to generate a prediction. For the latter case, SymetryML can impute the missing values in one of the following ways:
 
@@ -517,6 +549,6 @@ Certain SymetryML GUI parameters can be configured by editing the `/opt/symetry/
 
 | Parameter                    | Description                                          |
 | ---------------------------- | ---------------------------------------------------- |
-| `sml.web.lagal.notice`       | Set to `false` to hide the legal notice during login |
+| `sml.web.legal.notice`       | Set to `false` to hide the legal notice during login |
 | `sym.web.auto.logoff.enable` | Set to `false` disable auto logoff                   |
 | `sym.web.auto.logoff.time`   | Auto logoff time in minutes                          |
