@@ -6,7 +6,7 @@
 
 * [Onboarding Guide](guides/onboarding-guide.md)
 * [Technical Requirements](guides/technical-requirements.md)
-* [Admin User Guide](guides/untitled.md)
+* [Admin User Guide](guides/admin-user-guide.md)
 * [Installation Guide](guides/installation-guide/README.md)
   * [Installation Guide - GPU](guides/installation-guide/gpu-installation-guide.md)
   * [Installation Guide - Spark](guides/installation-guide/spark-installation-guide.md)

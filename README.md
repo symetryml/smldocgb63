@@ -9,7 +9,7 @@ Please consult the following sections:
 * [Onboarding Guide](guides/onboarding-guide.md)
 * [Technical Requirements](guides/technical-requirements.md)
 * [Installation Guide](guides/installation-guide/)
-* [Admin User Guide](guides/untitled.md)
+* [Admin User Guide](guides/admin-user-guide.md)
 * [ML Toolkit](symetryml-gui/web-documentation/)
 * [SymetryML Federated Learning](symetryml-gui/federation/)
 * [SymetryML Rest API](symetryml-rest-client/rest-documentation/)

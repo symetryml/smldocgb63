@@ -1,6 +1,6 @@
 # Installation Guide
 
-\`Copyright © 2023 by Symetry, Inc. 14 Pine Street, Ste 6 Morristown, NJ 07960 All Rights Reserved May 15th, 2023
+Copyright © 2026 by Symetry, Inc. 14 Pine Street, Ste 6 Morristown, NJ 07960 All Rights Reserved
 
 ## Introduction
 
