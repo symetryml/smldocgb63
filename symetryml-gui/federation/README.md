@@ -10,13 +10,13 @@ With the SymetryML federated learning network, all data residing at respective l
 
 ### Prerequisites
 
-This tutorial assumes the reader has some familiarity with the ML Toolkit. The user should feel comfortable creating a project and learning a dataset. If the reader is not familiar with the ML Toolkit, please refer to the [ML Toolkit](../web-documentation/) section. For more information about Federated Learning API refer to the[ About Federated Learning](../../symetryml-rest-client/rest-documentation/symetryml-projects-rest-api.md#about-federated-projects) section of the SymetryML Rest API documentation.
+This tutorial assumes the reader has some familiarity with the ML Toolkit. The user should feel comfortable creating a project and learning a dataset. If the reader is not familiar with the ML Toolkit, please refer to the [ML Toolkit](../web-documentation/) section. For more information about Federated Learning API refer to the [Federated Projects](../../symetryml-rest-client/rest-documentation/symetryml-projects-rest-api.md#federated-projects) section of the SymetryML Rest API documentation.
 
 ### Supporting Infrastructure
 
 While all proprietary data always resides locally with the respective members of the federation, the co-ordination of messaging (_i.e. sending updates, notifications, etc…_) requires additional infrastructure to enable communications between the various nodes in the network. This supporting infrastructure can be supplied by either Amazon Web Services ([AWS](https://aws.amazon.com/)) or [NATS](https://nats.io/).
 
-In both cases, this supporting infrastructure never sees the raw data, only the PSR representation of the data.
+In both cases, this supporting infrastructure never sees the raw data, only the DEM (Data Elements Matrix) representation of the data.
 
 ### General Concepts
 
