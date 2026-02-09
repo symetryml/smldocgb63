@@ -50,6 +50,43 @@ The available task options are based on the type of project selected. **Binary C
 
 For more information detailing the **Search Heuristic,** **Search Space, Optimization Metric** see section on [SymetryML Concepts - Model Select](symetryml-concepts.md#selecting-models)
 
+### Genetic Algorithm Selector (Experimental)
+
+The Genetic Algorithm selector uses evolutionary optimization to search for the optimal feature subset. It maintains a population of candidate feature sets and evolves them through selection, crossover, and mutation operations.
+
+Key parameters include:
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| **genetic\_population\_size** | 50 | Number of candidate solutions in each generation |
+| **genetic\_num\_generations** | 100 | Maximum number of generations to evolve |
+| **genetic\_mutation\_rate** | 0.05 | Probability of mutating each feature in a candidate |
+| **genetic\_crossover\_rate** | 0.8 | Probability of performing crossover between parents |
+| **genetic\_elite\_count** | 2 | Number of top candidates preserved unchanged each generation |
+| **genetic\_tournament\_size** | 3 | Number of candidates competing in tournament selection |
+| **genetic\_initial\_feature\_prob** | 0.1 | Probability of including each feature in the initial population |
+| **genetic\_min\_features** | 1 | Minimum number of features in any candidate |
+| **genetic\_max\_features** | (all) | Maximum number of features (unlimited by default) |
+| **genetic\_parallel\_threads** | 4 | Number of parallel threads for model evaluation |
+| **genetic\_stagnation\_limit** | 20 | Stop if no improvement after this many generations |
+
+### Bayesian Optimization Selector (Experimental)
+
+The Bayesian Optimization selector uses probabilistic surrogate modeling with an Upper Confidence Bound (UCB) acquisition function to efficiently explore the feature space.
+
+Key parameters include:
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| **bayesian\_num\_iterations** | 100 | Total number of feature subsets to evaluate |
+| **bayesian\_initial\_random** | 20 | Number of random evaluations before switching to surrogate model |
+| **bayesian\_exploration\_weight** | 0.1 | UCB exploration weight (higher = more exploration) |
+| **bayesian\_num\_candidates** | 100 | Number of candidate points evaluated by acquisition function |
+| **bayesian\_local\_search\_steps** | 10 | Number of local search steps per iteration |
+| **bayesian\_embedding\_dim** | 50 | Dimensionality of the feature embedding |
+| **bayesian\_top\_k\_memory** | 200 | Number of top evaluations retained in memory |
+| **bayesian\_stagnation\_limit** | 30 | Stop if no improvement after this many iterations |
+
 ## Clone Model
 
 Models within a particular class (i.e., Classification or Regression) can be cloned, rebuilt, with a different algorithm by simply selecting the preferred algorithm within the model info view.
