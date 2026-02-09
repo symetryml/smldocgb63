@@ -1,5 +1,6 @@
 # Data Sources
 
+> **Streaming Data Sources:** For real-time streaming data sources such as Kafka and NATS, please refer to the [Streams](streams.md) documentation.
 
 ## Creating New Data Sources
 
@@ -60,7 +61,7 @@ Certain data sources are able to leverage Apache Spark for distributed learning 
 * Oracle Object Storage
 * Google Cloud Storage
 
-To enable spark for one of the supported data source, one simply has to select the **Enable Spark** checkbox, choose the preferred version of Spark, and supply the master url.
+To enable Spark for one of the supported data sources, select the **Enable Spark** checkbox and supply the master url.
 
 ![Spark Required Inputs](../../.gitbook/assets/spark\_0.png)
 
@@ -68,7 +69,7 @@ Additional Spark specific configurations can be supplied by clicking on the **Sp
 
 ![Spark Optional Inputs](../../.gitbook/assets/spark\_1.png)
 
-For a full list of spark specific configuration parameters please see the official spark documentation [page](https://spark.apache.org/docs/3.0.2/configuration.html)
+For a full list of Spark specific configuration parameters please see the official Spark documentation [page](https://spark.apache.org/docs/4.0.0/configuration.html)
 
 ## Uploading Data Source
 
