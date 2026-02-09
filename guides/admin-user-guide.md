@@ -1,6 +1,6 @@
 # Admin User Guide
 
-Copyright © 2022 by Symetry, Inc. 14 Pine Street, Ste 6 Morristown, NJ 07960 All Rights Reserved November 8th, 2022
+Copyright © 2026 by Symetry, Inc. 14 Pine Street, Ste 6 Morristown, NJ 07960 All Rights Reserved
 
 ## Introduction
 
