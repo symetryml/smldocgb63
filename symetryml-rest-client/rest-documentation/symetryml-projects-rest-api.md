@@ -11,7 +11,7 @@ SymetryML is different. There is no limitation on the number of rows that can be
 
 ## SymetryML Project Type
 
-New with SymetryML version 5.0 are “Federated” project types. The following table describes the difference between these project types and when to use them. For more details on Federated Project please consult this [section](symetryml-projects-rest-api.md#about-federated-projects).
+The following table describes the difference between the available project types and when to use them. For more details on Federated Project please consult this [section](symetryml-projects-rest-api.md#about-federated-projects).
 
 | Project Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -25,7 +25,7 @@ New with SymetryML version 5.0 are “Federated” project types. The following 
 
 ## SymetryML Projects and Random Forest
 
-New With SymetryML 5.2 is a powerful Online Random Forest model. In order to use it, some configuration is needed when creating your project:
+SymetryML supports a powerful Online Random Forest model. In order to use it, some configuration is needed when creating your project:
 
 * Specify the target / dependent column
 * Specify the type of random forest (currently only classifier is available, soon regressor random forest will also be available)
@@ -42,15 +42,15 @@ Kaplan Meier(KM) is a survival model which can estimate a survival function from
 
 ## Clustering
 
-New with SymetryML version 5.4 is an online version of KMeans clustering. The clustering algorithm is controlled by a few parameters that need to be specified when creating a project. Please consult the [Cluster Models](modeling-api.md#about-clustering) for details on the additional configuration to enable KMeans clustering on your project.
+SymetryML supports an online version of KMeans clustering. The clustering algorithm is controlled by a few parameters that need to be specified when creating a project. Please consult the [Cluster Models](modeling-api.md#about-clustering) for details on the additional configuration to enable KMeans clustering on your project.
 
 ## Partitioned Projects
 
-New with SymetryML 4.2 is the ability to create _Partitioned Projects_. Partitioned project allows you to build Multi-Class LDA models as well as QDA models. When creating such projects one must specify which attributes will be the targets for these models. This parameter is called the _partition column_. This parameter is mandatory. Please refer to this [section](symetryml-projects-rest-api.md#sample-request-response-partitioned-projects) for a sample REST request / response.
+SymetryML supports _Partitioned Projects_. Partitioned project allows you to build Multi-Class LDA models as well as QDA models. When creating such projects one must specify which attributes will be the targets for these models. This parameter is called the _partition column_. This parameter is mandatory. Please refer to this [section](symetryml-projects-rest-api.md#sample-request-response-partitioned-projects) for a sample REST request / response.
 
 ## Sequence Projects
 
-With the release of SymetryML Version 4.1 came the ability to use Markov Chains and Hidden Markov Model. To build such models, you create a sequence SymetryML Project and specify its order. Order defines your _ngrams_ that will be learned and the level of you _ngrams_ will be a given value in a dataframe. For Markov chains, specify a categorical attribute for the input of your model. For the Hidden Markov Model, the observed state can be categorical or continuous, but the hidden must be categorical.
+SymetryML supports Markov Chains and Hidden Markov Models. To build such models, you create a sequence SymetryML Project and specify its order. Order defines your _ngrams_ that will be learned and the level of you _ngrams_ will be a given value in a dataframe. For Markov chains, specify a categorical attribute for the input of your model. For the Hidden Markov Model, the observed state can be categorical or continuous, but the hidden must be categorical.
 
 For the sequence project, SymetryML interprets the [dataframe](appendix-a-json-data-structure-schema.md#dataframe-json) data structure differently:
 
@@ -61,7 +61,7 @@ For more information on _ngrams_, order, and level, see [https://en.wikipedia.or
 
 ## Federated Projects
 
-New with version 5.0 of SymetryML is the capabilities to allows multiple SymetryML projects - possibly on different sites / geographical locations / different business units - to synchronize with each other in order to leverage each others data without sharing the actual data. This functionality is called `Federated Learning`. A federated project act exactly the same as any other project in terms of how you build model or explore the data. The only difference is how you create them. For more details about the lifecycle of federated project please consult the [Federated Learning API](federated-learning-api/).
+SymetryML allows multiple SymetryML projects - possibly on different sites / geographical locations / different business units - to synchronize with each other in order to leverage each others data without sharing the actual data. This functionality is called `Federated Learning`. A federated project act exactly the same as any other project in terms of how you build model or explore the data. The only difference is how you create them. For more details about the lifecycle of federated project please consult the [Federated Learning API](federated-learning-api/).
 
 ## Data Filtering
 

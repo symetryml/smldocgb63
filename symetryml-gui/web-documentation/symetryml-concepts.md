@@ -124,7 +124,7 @@ Computation is performed on the CPU. Used for sequence data sets.
 
 ### GPU
 
-Available if the environment is GPU enabled. Computation is performed on the GPU. Provides improved performance over CPU based projects with very wide datasets (i.e.large amount of features)
+Available if the environment is GPU enabled. Computation is performed on the GPU. Provides improved performance over CPU based projects with very wide datasets (i.e. large amount of features)
 
 ![Select Multi-GPU](../../.gitbook/assets/webui\_selectmultigpu.png)
 
@@ -146,21 +146,21 @@ Linear regression assumes that the target attribute is normally distributed. Whi
 
 A SymetryML project, with power transformation enabled, will automatically create new features representing various power transformations of the target attribute. These additional target features will have a prefix and separator to easily pinpoint them. (e.g `pt_sepal_width^-2.0`, `pt_sepal_width^-1.8`, `pt_sepal_width^-1.6`, …, `pt_sepal_width^1.8`, `pt_sepal_width^2.0`). It’s possible to configure the prefix and separator - `pt_` and `^` in our previous example. Please refer to the [Power Parameters](../../symetryml-rest-client/rest-documentation/modeling-api.md#power-regression-parameters) table for details.
 
-Once a project has learned these transformations, a Power Regression model can be build which would select the optimal transformed target.
+Once a project has learned these transformations, a Power Regression model can be built which would automatically select the optimal transformed target.
 
 ### Online Models
 
-While the majority of the models in SymetryML can be build after the project has learned, Kaplan-Meier(KM), Random Forest(RF), Single Pass Logistic Regression (SPLR), and Real Time Clustering (RTC) must be specified before any data has been processed. This allows SymetryML to process the data and fit the models in one pass. Subsequent will provide additional information of each type of online model.
+While the majority of the models in SymetryML can be built after the project has learned, Kaplan-Meier(KM), Random Forest(RF), Single Pass Logistic Regression (SPLR), and Real Time Clustering (RTC) must be specified before any data has been processed. This allows SymetryML to process the data and fit the models in one pass. Subsequent sections will provide additional information of each type of online model.
 
 #### Kaplan-Meier
 
 Kaplan Meier(KM) is a survival model which can estimate a survival function from lifetime data. With the aid of the survival function, it is possible to estimate the probability of an adverse event not occurring after a specific point in time. The most common usage of such models occurs in the field of clinical trials where a researcher might be interested in the probability that a patient will survive beyond some time _t_.
 
-To build the KM model, your data must be contain the following types of columns:
+To build the KM model, your data must contain the following types of columns:
 
 * Time column - integer valued column representing discrete time.
 * Event column - binary column coded in a way where 1 represents an event occurring and 0 represents the subject leaving the study.
-* Group column - An column which will partition the model and compute a separate survival function for each member of the group
+* Group column - A column which will partition the model and compute a separate survival function for each member of the group
 
 #### Random Forest
 
@@ -286,7 +286,7 @@ If the project is partitioned (i.e., split on a particular column), two addition
 
 These models handle the multi class classification problem much better than their regular counterparts.
 
-For projects that are enabled for Random Forest, see [section](projects.md#random-forest), you will gain access to a power powerful set of models which gracefully handle regression, classification and anomaly problems.
+For projects that are enabled for Random Forest, see [section](projects.md#random-forest), you will gain access to a powerful set of models which gracefully handle regression, classification and anomaly problems.
 
 * Random Forest (classification)
 * Random Forest (regression)
@@ -352,7 +352,7 @@ When **Q First** is selected, the required parameters are:
 
 ![PCR - Full](../../.gitbook/assets/pcr\_q\_first.png)
 
-If **Q Full**, the required parame become:
+If **Q Full**, the required parameters become:
 
 | Parameter          | Type    | Description                       |
 | ------------------ | ------- | --------------------------------- |
@@ -429,7 +429,7 @@ This can be performed by right clicking on the anomaly model and selecting **Ano
 
 ![Anomaly Plot - Result](../../.gitbook/assets/anomaly\_plot.png)
 
-Standalone EVT models as well as generic anomaly models that have been augmented with EVT will produce an anomaly plot with either a sigle upper threshold or both an upper and lower thresholds. Otherwise, the default behaiviour of the anomaly plot is to show the upper quantiles of the anomaly scores.
+Standalone EVT models as well as generic anomaly models that have been augmented with EVT will produce an anomaly plot with either a single upper threshold or both an upper and lower thresholds. Otherwise, the default behaviour of the anomaly plot is to show the upper quantiles of the anomaly scores.
 
 #### Anomaly Detection with EVT
 
@@ -449,14 +449,14 @@ EVT has the following optional parameters which can be set:
 | **evt\_quantile**         | 98      | This parameter is the original chosen quantile from which we assume we are in the tail of the score distribution. Any value above that can be used to fit the tail Generalized Pareto distribution.    |
 | **evt\_warmup\_size**     | 1,000   | Size of the initial set of scores used to build the Pareto Distribution.                                                                                                                               |
 | **evt\_window\_size**     | 450     | The size of the look back window used to update the Pareto Distribution.                                                                                                                               |
-| **evt\_two\_sides**       | false   | If false, only values above `evt_quantile` will be treated as exceedances. Otherwise, uppwer exceedances (above `evt_quantile`) and lower exceedances (`1 - evt_quantile`) will be tracked seperately. |
+| **evt\_two\_sides**       | false   | If false, only values above `evt_quantile` will be treated as exceedances. Otherwise, upper exceedances (above `evt_quantile`) and lower exceedances (`1 - evt_quantile`) will be tracked separately. |
 | **evt\_tdigest**          | false   | Allows the specified `evt_quantile` to dynamically adjust with the addition of new data. If false, the quantile will be based on the original `evt_warmup_size` number of rows.                        |
 | **evt\_max\_exceedances** | 100,000 | The maximum number of values used to fit the Pareto Distribution.                                                                                                                                      |
 | **evt\_seed**             | 42      | Seed for initial                                                                                                                                                                                       |
 
 ![EVT Model Parameters](../../.gitbook/assets/evt\_parameters.png)
 
-In addition to modifying the output of a generic anomaly model, EVT can be build as a standalone model. However, unlike other anomaly models, EVT can only track one attribute at a time. It is best suited for time series data and does not get initialized by the internal state of the PSR. Instead, it will be initialized during the prediction phase during which the intial `evt_warmup_size` number of rows will be used for calibration. Subsequent prediction requests to the model will be used for both flagging the anomaly value and subsequent recalibration, in that order.
+In addition to modifying the output of a generic anomaly model, EVT can be built as a standalone model. However, unlike other anomaly models, EVT can only track one attribute at a time. It is best suited for time series data and does not get initialized by the internal state of the PSR. Instead, it will be initialized during the prediction phase during which the initial `evt_warmup_size` number of rows will be used for calibration. Subsequent prediction requests to the model will be used for both flagging the anomaly value and subsequent recalibration, in that order.
 
 #### Live Predict
 
@@ -550,5 +550,5 @@ Certain SymetryML GUI parameters can be configured by editing the `/opt/symetry/
 | Parameter                    | Description                                          |
 | ---------------------------- | ---------------------------------------------------- |
 | `sml.web.legal.notice`       | Set to `false` to hide the legal notice during login |
-| `sym.web.auto.logoff.enable` | Set to `false` disable auto logoff                   |
+| `sym.web.auto.logoff.enable` | Set to `false` to disable auto logoff                   |
 | `sym.web.auto.logoff.time`   | Auto logoff time in minutes                          |

@@ -1,2 +1,0 @@
-# Appendix B Sample Code
-

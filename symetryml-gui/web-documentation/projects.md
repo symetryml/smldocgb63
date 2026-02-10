@@ -96,7 +96,7 @@ Optionally, you can select the initial pool of attributes with which you can bui
 
 ![SPLR Enabled Project](../../.gitbook/assets/lr1.png)
 
-Ensure you model is assigned a valid name. Click **Next** to continue.
+Ensure your model is assigned a valid name. Click **Next** to continue.
 
 ![SPLR Model Name](../../.gitbook/assets/lr2.png)
 
@@ -138,7 +138,7 @@ To build a clustering model, a project needs to be created with a specific set o
 | **Cluster Features**       | Mandatory          | The features to use for the clustering algorithm.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | **Cluster Max Iterations** | Optional           | Default is **1000**. This control the number of iterations of the KMeans algorithm.                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | **Cluster # Centroids**    | Optional           | Default is **100**. This parameter control the number of centroid that are kept in real time on the data. Typically this number is much higher than the intended number of cluster - e.g. the target _k_ parameters                                                                                                                                                                                                                                                                                                                               |
-| **Cluster Warmup Period**  | Optional           | Default is **101**. This parameters control how many tuples of data must be seen before the initial real-time cluster will be constructed using the _cluster\_num\_centroids_ parameter as the k number. Once the initial cluster is created it will just be updated in real-time with each new tuple/row of data. Note that **Cluster Warmup Period** needs to be greater than **Cluster # Centroids**, e.g. **Cluster # Centroids**=100 and **Cluster # Centroids**=101. If this condition is not meet an error will be raised by the software. |
+| **Cluster Warmup Period**  | Optional           | Default is **101**. This parameters control how many tuples of data must be seen before the initial real-time cluster will be constructed using the _cluster\_num\_centroids_ parameter as the k number. Once the initial cluster is created it will just be updated in real-time with each new tuple/row of data. Note that **Cluster Warmup Period** needs to be greater than **Cluster # Centroids**, e.g. **Cluster # Centroids**=100 and **Cluster # Centroids**=101. If this condition is not met an error will be raised by the software. |
 
 Once a cluster project is created, building the model is as simple as right click on the **Exploration** icon and selecting the corresponding option.
 
@@ -162,7 +162,7 @@ You will be notified of the results once the **Optimize K-Means Job** is complet
 
 ![Optimize K-Means Job Done](../../.gitbook/assets/cluster\_optimize\_2.png)
 
-The result of the optimization process is a set of two graphics which allow you to compare the **WSSSE** and the **Silhoutte Scores** across different models.
+The result of the optimization process is a set of two graphics which allow you to compare the **WSSSE** and the **Silhouette Scores** across different models.
 
 ![Optimize K-Means Result](../../.gitbook/assets/cluster\_optimize\_3.png)
 

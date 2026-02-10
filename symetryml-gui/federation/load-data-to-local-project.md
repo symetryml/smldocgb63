@@ -1,6 +1,6 @@
 # Load data to local project
 
-Now that you have created the first node of your federation, the next step will be to learn some data and and to add additional nodes to your federation.
+Now that you have created the first node of your federation, the next step will be to learn some data and to add additional nodes to your federation.
 
 This step is the same regardless of which Federation backend you chose in the first step. Here we will use the AWS backed Federation as an example; however, the process for NATS is identical.
 
@@ -8,7 +8,7 @@ Right click on your **Local Project** and the menu displayed below will appear. 
 
 ![Federated Learning: Loading data to local project](<../../.gitbook/assets/fed\_learn\_0.png>)
 
-The next window allows you to select your your data source, whether an existing data source already loaded into SymetryML, or a new data source to be loaded:
+The next window allows you to select your data source, whether an existing data source already loaded into SymetryML, or a new data source to be loaded:
 
 ![Federated Learning: Selecting data for local project](<../../.gitbook/assets/fed\_learn\_1.png>)
 

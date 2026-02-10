@@ -4,9 +4,9 @@ description: >-
   federation. The REST calls to create / join a federation
 ---
 
-# Federated Learning with Nats
+# Federated Learning with NATS
 
-## Create Nats Backed Federation
+## Create NATS Backed Federation
 
 ### URL
 
@@ -74,12 +74,12 @@ POST /symetry/rest/{cid}/fedml/{pid}/getEncrypted
 
 **Get Encrypted Body Key Map Value.**
 
-TDB new ResponseEntityKey.
+TBD new ResponseEntityKey.
 
 | Mandatory key       | Required / Optional | Value Description                                     |
 | ------------------- | ------------------- | ----------------------------------------------------- |
 | **passwd**          | Required            | Password to use to encrypt the federation information |
-| **fed\_rest\_host** | Required            | Hostname where admin can be reach at.                 |
+| **fed\_rest\_host** | Required            | Hostname where admin can be reached at.                 |
 
 ### HTTP Responses
 
@@ -116,7 +116,7 @@ Response:
 
 ### Decrypted Message Example:
 
-Once decrypted the Federation info will contains information like in the following example. This is basically a map with a few key/ value pair. These key value pairs must be used when joining a federation. See [section](./#mandatory-key-value-pairs-from-federation-admin) for details.
+Once decrypted the Federation info will contain information like in the following example. This is basically a map with a few key/ value pair. These key value pairs must be used when joining a federation. See [section](./#mandatory-key-value-pairs-from-federation-admin) for details.
 
 ```
 Decrypted JSON:
@@ -129,7 +129,7 @@ Decrypted JSON:
 }
 ```
 
-## Join a Nats Backed Federation
+## Join a NATS Backed Federation
 
 ### URL
 
@@ -150,7 +150,7 @@ The request body is composed of 2 types of key/value pairs:
 
 #### Mandatory Key / Value Pairs from Federation Admin
 
-The following key value will be received as part of the password encrypted json message from the federation admin. They need to be added the the query body without modification.
+The following key value will be received as part of the password encrypted json message from the federation admin. They need to be added to the query body without modification.
 
 <table data-header-hidden><thead><tr><th width="215.6225005677133">Key</th><th></th><th></th></tr></thead><tbody><tr><td>Key</td><td>Mandatory / Optional</td><td>Description</td></tr><tr><td><strong>sync_sched</strong></td><td>Mandatory</td><td>The sync schedule, consult <a href="../about-federated-learning.md#federation-terminology">FedML Terminology</a> for more details.</td></tr><tr><td><strong>fed_secret_key</strong></td><td>Mandatory</td><td>The secret key used to encrypt info exchanged between nodes in a federation.</td></tr><tr><td><strong>fed_name</strong></td><td>Mandatory</td><td>The federation id.</td></tr><tr><td><strong>fed_req_token</strong></td><td>Mandatory</td><td>The token used to verify that a join request has not expired.</td></tr><tr><td><strong>nats_hosts</strong></td><td>Mandatory</td><td>The URL of the NATS service.</td></tr><tr><td><strong>nats_sec_user</strong></td><td>Optional</td><td>The user for NATS user/password communication security. Note: this is mandatory if <strong>nats_sec_token</strong> is not used.</td></tr><tr><td><strong>nats_sec_passwd</strong></td><td>Optional</td><td>The password for NATS user/password communication security. Note: this is mandatory if <strong>nats_sec_token</strong> is not used.</td></tr><tr><td><strong>nats_sec_token</strong></td><td>Optional</td><td>The token for NATS token communication security. Note: this is mandatory if <strong>nats_sec_user</strong> and <strong>nats_sec_passwd</strong> are not used.</td></tr></tbody></table>
 

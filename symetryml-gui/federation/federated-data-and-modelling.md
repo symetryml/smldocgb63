@@ -2,7 +2,7 @@
 
 Depending on your choice of the **Sync Schedule** you might have to wait a few minutes for the two nodes to sync up.
 
-Because of the asynchronous nature of fed synchronization that happens in the background, it is important to check for errors by clicking on the _Error Log_ icon, as well as the the _Sync Log_ icon for general sync information.&#x20;
+Because of the asynchronous nature of fed synchronization that happens in the background, it is important to check for errors by clicking on the _Error Log_ icon, as well as the _Sync Log_ icon for general sync information.&#x20;
 
 Once the nodes are in sync, it is now time to see how the federation allows sharing of these local projects so that every peer can each build one unified federated project. Afterwards, we will take a look at how individual nodes of the same federation are able to build identical models.
 
@@ -18,7 +18,7 @@ Below is a view of the project of Node 2 after joining the federation and sharin
 
 The first noticeable difference is that the **COUNT** increased from a local count of _10,000_ to a federated **COUNT** of _20,000_. _**Node 1**_ has a **COUNT** of _10,000_ and _**Node 2**_ has a **COUNT** of _10,000_, hence the federated **COUNT** is now totalling _20,000_ as demonstrated in the figure above. Once again, the remaining statistics (_i.e. Mean, Variance, Std. Dev, and Skewness_) now reflect the total from all peers in the federation.
 
-Because syncronisation across federation happen at the same time, we can be sure that Node 1 has the same statistics for the shared variables.
+Because synchronisation across federation happen at the same time, we can be sure that Node 1 has the same statistics for the shared variables.
 
 ### Federated Learning Model Building
 

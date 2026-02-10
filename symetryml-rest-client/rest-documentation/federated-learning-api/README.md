@@ -50,7 +50,7 @@ Response:
 
 ## Federated Learning: Get Federation Invitation
 
-This Rest endpoint is used in order to get 'an invite' to join the federation by the administrator of the federation. The body of the request contain the password to use to encrypt the resulting `encryptedGroupInfo` can then be shared with another peer so that they can join. Please note that `encryptedGroupInfo` can only be used 1 time. For each peer that want to join the federation a unique `encryptedGroupInfo` needs to be generated.
+This Rest endpoint is used in order to get 'an invite' to join the federation by the administrator of the federation. The body of the request contains the password to use to encrypt the resulting `encryptedGroupInfo` can then be shared with another peer so that they can join. Please note that `encryptedGroupInfo` can only be used 1 time. For each peer that want to join the federation a unique `encryptedGroupInfo` needs to be generated.
 
 ### URL
 
@@ -69,7 +69,7 @@ POST /symetry/rest/{cid}/fedml/{pid}/getInvitation
 | Mandatory key       | Required / Optional | Value Description                                     |
 | ------------------- | ------------------- | ----------------------------------------------------- |
 | **passwd**          | Required            | Password to use to encrypt the federation information |
-| **fed\_rest\_host** | Required            | Hostname where admin can be reach at.                 |
+| **fed\_rest\_host** | Required            | Hostname where admin can be reached at.                 |
 
 ### HTTP Responses
 
@@ -89,7 +89,7 @@ The response will be stored in the `encryptedGroupInfo` entity which is a string
 * for AWS based federation:
   * aws\_topic\_arn
   * aws\_topic\_region
-* for Nats based federation:
+* for NATS based federation:
   * nats\_hosts
   * nats\_sec\_user
   * nats\_sec\_passwd
@@ -114,7 +114,7 @@ Response:
 
 ### Decrypted Message Example:
 
-Once decrypted the Federation info will contains information like in the following example. This is basically a map with a few key/ value pair. These key value pairs must be used when joining a federation.
+Once decrypted the Federation info will contain information like in the following example. This is basically a map with a few key/ value pair. These key value pairs must be used when joining a federation.
 
 ```
 Decrypted JSON:
@@ -131,7 +131,7 @@ Decrypted JSON:
 
 ## Federated Learning: Join a Federation
 
-Please consult the following sections for details on how to join an existing federation depending on if you are using Nats (www.nats.io) or AWS backed federation.
+Please consult the following sections for details on how to join an existing federation depending on if you are using NATS (www.nats.io) or AWS backed federation.
 
 * AWS : [Consult this section](federated-learning-with-aws-1.md#join-an-aws-backed-federation)
 * NATS : [Consult this section](federated-learning-with-nats-1.md#join-a-nats-backed-federation)

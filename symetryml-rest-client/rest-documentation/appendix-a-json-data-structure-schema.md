@@ -490,7 +490,7 @@ FederationInfo : {
     "rcv_error_action" : "string", // federation contract receive error action
     "snd_error_action" : "string", // federation contract send error action
     "fed_use_smpc" : "string", // whether this federation use SMPC or not
-    "allow_peers_explore" : boolean // whether this peer allows peer exploration or not
+    "allow_peers_explore" : "boolean" // whether this peer allows peer exploration or not
 }
 ```
 

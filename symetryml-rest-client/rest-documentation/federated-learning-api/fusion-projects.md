@@ -5,11 +5,11 @@
 Fusion projects bring 2 major functionalities to the SymetryML environment
 
 1. Allows to scale to real time streaming data with a very large number of IO (Gigabytes per secs)
-2. Allows to create centralized federated learning setting where the data privacy of each cells in preserved. Please consult [About Federated Learning Topologies](about-federated-learning-topologies.md) for more details.
+2. Allows to create centralized federated learning setting where the data privacy of each cell is preserved. Please consult [About Federated Learning Topologies](about-federated-learning-topologies.md) for more details.
 
 ### Real Time Streaming Data Scaling
 
-Fusion Project allows to handle data coming from a stream with very high throughput. It is possible to scale the system to handle millions of rows / tuples per seconds. SymetryML Fusion projects do not process any data per say, instead they are reliant on other projects (called _cell projects_) to process streaming data in parallel. This is shown here:
+Fusion Project allows to handle data coming from a stream with very high throughput. It is possible to scale the system to handle millions of rows / tuples per seconds. SymetryML Fusion projects do not process any data per se, instead they are reliant on other projects (called _cell projects_) to process streaming data in parallel. This is shown here:
 
 ![Example of 3 Cells Fusion Project](../../../.gitbook/assets/fusion-1.png)
 
@@ -19,7 +19,7 @@ One important thing to know about Fusion project is that all components (the mai
 
 ### Fusion Project and Federated Learning
 
-A Fusion Project also allow to create a centralized federated learning setting where only the a central server can leverage data from various site without never accessing the actual data. That is privacy of data is preserved. In the image before the 3 cells could be 2 individual doctor offices + 1 laboratory situated at different location in a country. These 2 doctor and laboratory would be feeding data to a central server - possibly a larger organization that oversees model building and then distribute them back to the doctors and laboratory organizations.
+A Fusion Project also allow to create a centralized federated learning setting where only a central server can leverage data from various site without ever accessing the actual data. That is privacy of data is preserved. In the image before the 3 cells could be 2 individual doctor offices + 1 laboratory situated at different location in a country. These 2 doctor and laboratory would be feeding data to a central server - possibly a larger organization that oversees model building and then distribute them back to the doctors and laboratory organizations.
 
 Again please consult [About Federated Learning Topologies](about-federated-learning-topologies.md) for more details on how fusion can be used to create a centralized federated learning system.
 
@@ -30,7 +30,7 @@ The following section describes the rest endpoint pertaining to fusion projects.
 * Data source cannot be attached to a Fusion project because the processing of data needs to happen on the _project cells_ of the fusion project
   * Data source statistics are also not available for same reason
 
-On the other hand its possible to
+On the other hand it's possible to
 
 * Use the [Exploration API](../exploration-api.md)
 * Use the [Model API](../modeling-api.md) and [Prediction API](../prediction-api.md)

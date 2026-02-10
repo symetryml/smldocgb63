@@ -6,7 +6,7 @@ After you create a project, you can build models. Using models, you can leverage
 
 To create a new model:
 
-Right-click the **Exploration** icon in the project tree, and then click the appropriate model for you needs.
+Right-click the **Exploration** icon in the project tree, and then click the appropriate model for your needs.
 
 ![Project Create Model](../../.gitbook/assets/project\_create.png)
 
@@ -22,7 +22,7 @@ After completing the model-building process, double click on the model icon to s
 
 ## Model Build Parameters
 
-Most of the SML models allow for model specific options to be enabled before building. One example of such option is the **pseudo matrix inverse**. With **pseudo inverse** enabled, a linear model, which would typically not be build due to matrix non invertibility, can be created by the user. However, such model is likely to be unstable and therefore this option should only be used by advanced users.
+Most of the SML models allow for model specific options to be enabled before building. One example of such option is the **pseudo matrix inverse**. With **pseudo inverse** enabled, a linear model, which would typically not be built due to matrix non invertibility, can be created by the user. However, such model is likely to be unstable and therefore this option should only be used by advanced users.
 
 ![Model Build Parameters](../../.gitbook/assets/create\_model\_lda.png)
 
@@ -161,7 +161,7 @@ After the assessment process finishes, a dialog box asks whether you want to see
 
 ## Export/Import Models
 
-Once built, a model can be exported out of a project and later imported into a different project. This allows for workflows in which a production environment can be completely separate from a development environment while this levering models build in the latter.
+Once built, a model can be exported out of a project and later imported into a different project. This allows for workflows in which a production environment can be completely separate from a development environment while leveraging models built in the latter.
 
 ![Model Export](../../.gitbook/assets/model\_export.png)
 

@@ -214,7 +214,7 @@ Data sources might contain sensitive information that should never be passed in 
 4. Send the encrypted string as part of the body to any REST service that requests a [DSInfo](appendix-a-json-data-structure-schema.md#dsinfo-json) as the body.
 5. The server decrypts the string using the client secret key and reconstructs the [DSInfo](appendix-a-json-data-structure-schema.md#dsinfo-json).
 
-See [Appendix B](https://github.com/symetryml/smldocgb/blob/master/symetry-rest/rest-documentation/appendix-b-sample-code.md) - for code example on how to perform this encryption in Java, JavaScript, or Python.
+
 
 ## Data Source Create
 

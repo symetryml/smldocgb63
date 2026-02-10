@@ -14,7 +14,7 @@ Select the preferred **Data Source Type**. The wizard forms change, depending on
 
 ![S3 Data Source](../../.gitbook/assets/s3\_ds.png)
 
-![SFTP Data Souce](../../.gitbook/assets/sftp\_ds.png)
+![SFTP Data Source](../../.gitbook/assets/sftp\_ds.png)
 
 ![Local Data Source](../../.gitbook/assets/local\_ds.png)
 

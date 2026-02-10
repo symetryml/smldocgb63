@@ -40,10 +40,10 @@
   * [Encoder Object REST API](symetryml-rest-client/rest-documentation/encoder-object-rest-api.md)
   * [SymetryML Projects REST API](symetryml-rest-client/rest-documentation/symetryml-projects-rest-api.md)
   * [About Federated Learning](symetryml-rest-client/rest-documentation/about-federated-learning.md)
-  * [Hipaa Compliance and Federated Learning](symetryml-rest-client/rest-documentation/hipaa-compliance-and-federated-learning.md)
+  * [HIPAA Compliance and Federated Learning](symetryml-rest-client/rest-documentation/hipaa-compliance-and-federated-learning.md)
   * [Federated Learning API](symetryml-rest-client/rest-documentation/federated-learning-api/README.md)
     * [Federated Learning Topologies](symetryml-rest-client/rest-documentation/federated-learning-api/about-federated-learning-topologies.md)
-    * [Federated Learning with Nats](symetryml-rest-client/rest-documentation/federated-learning-api/federated-learning-with-nats-1.md)
+    * [Federated Learning with NATS](symetryml-rest-client/rest-documentation/federated-learning-api/federated-learning-with-nats-1.md)
     * [Federated Learning with AWS](symetryml-rest-client/rest-documentation/federated-learning-api/federated-learning-with-aws-1.md)
     * [Fusion Projects](symetryml-rest-client/rest-documentation/federated-learning-api/fusion-projects.md)
   * [Exploration API](symetryml-rest-client/rest-documentation/exploration-api.md)
@@ -63,7 +63,6 @@
   * [Miscellaneous API](symetryml-rest-client/rest-documentation/miscellaneous-api.md)
   * [WebSocket API](symetryml-rest-client/rest-documentation/websocket-api.md)
   * [Appendix A JSON Data Structure Schema](symetryml-rest-client/rest-documentation/appendix-a-json-data-structure-schema.md)
-  * [Appendix B Sample Code](symetryml-rest-client/rest-documentation/appendix-b-sample-code.md)
 
 ## SymetryML SaaS
 

@@ -27,7 +27,7 @@ The remainder of this tutorial will guide you through these three steps.
 
 Referencing a remote project can be done in one of two ways.
 
-* [Manual Project Reference](dem-generator.md#manual-project-reference) - Manually inputing the remote project information
+* [Manual Project Reference](dem-generator.md#manual-project-reference) - Manually inputting the remote project information
 * [Automatic Project Reference](dem-generator.md#automatic-project-reference) - Downloading the reference file which contains remote project information
 
 #### Manual Project Reference
@@ -44,7 +44,7 @@ Refresh the project list and select the remote **Project** as your destination.
 
 ![Remote Project](../.gitbook/assets/dem\_gen\_1.gif)
 
-Selecting the remote project will allow you verify it's schema.
+Selecting the remote project will allow you to verify its schema.
 
 Press **Confirm** to finish Step 1.
 
@@ -79,7 +79,7 @@ Click **Confirm** to close the type mapping panel and finish Step 2.
 
 ### Step 3 Uploading the DEM
 
-At this stage you have specified a destination project, generated a local DEM, the only step left is click the **Upload** button.
+At this stage you have specified a destination project, generated a local DEM, the only step left is to click the **Upload** button.
 
 ![DEM Upload](../.gitbook/assets/dem\_gen\_3.gif)
 
