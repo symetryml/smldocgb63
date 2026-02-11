@@ -37,7 +37,7 @@ A _regression_ model, on the other hand, attempts to predict the value of a cont
 
 _Sequence_ models attempt to describe the behaviour of sequence of events and model data that is temporal in nature. What is the next most likely state? How likely that a particular sequence would occur based on our model? These are the typical questions that sequence models attempt to answer.
 
-_Anomaly_ models are unsupervised learners, they do not require the target attribute to be present. Instead, they assess the similarity of a particular record to a set of records on which the models was trained on. They excel in situations where the number of labeled cases is very small, or cases where the true label for the record is unknown. Instances which are drastically different from the ones the model was build with, will yield a higher anomaly score than those which are aligned with what the model has seen before.
+_Anomaly_ models are unsupervised learners, they do not require the target attribute to be present. Instead, they assess the similarity of a particular record to a set of records on which the models was trained on. They excel in situations where the number of labeled cases is very small, or cases where the true label for the record is unknown. Instances which are drastically different from the ones the model was built with, will yield a higher anomaly score than those which are aligned with what the model has seen before.
 
 _Clustering_ models attempt to group your data such that the instances within a particular group are more similar to each other than to their counterparts in other groups. These models are unsupervised and can be built in an online fashion.
 

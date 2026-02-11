@@ -1,6 +1,6 @@
 # Installation Guide - GPU
 
-Copyright © 2021 by Symetry, Inc. 14 Pine Street, Ste 6 Morristown, NJ 07960 All Rights Reserved April 15th, 2021
+Copyright © 2026 by Symetry, Inc. 14 Pine Street, Ste 6 Morristown, NJ 07960 All Rights Reserved
 
 ## Introduction
 

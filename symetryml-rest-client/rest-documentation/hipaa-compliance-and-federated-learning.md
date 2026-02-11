@@ -1,6 +1,6 @@
-# Hipaa Compliance and Federated Learning
+# HIPAA Compliance and Federated Learning
 
-By Default, SymetryML projects are Hipaa compliant. This means that additional restrictions will be enforced for them.
+By Default, SymetryML projects are HIPAA compliant. This means that additional restrictions will be enforced for them.
 
 ### Safe Harbor
 
@@ -10,13 +10,13 @@ Please note that it is assumed that the data is Safe Harbor Compliant. In the ab
 
 Please consult the [section on SMPC](about-federated-learning.md#secure-multi-party-computation-mode) for further details on enabling Secure Multi-Party Computation (SMPC) for your federation.
 
-* When adding a data source to a Hipaa compliant project, one must specify which column(s) uniquely identify a patient. This means that at least one of column of the data source must have an attribute type equals to `'P'` which stands for `TYPE_PATIENT_ID`.
+* When adding a data source to a HIPAA compliant project, one must specify which column(s) uniquely identify a patient. This means that at least one of column of the data source must have an attribute type equals to `'P'` which stands for `TYPE_PATIENT_ID`.
 * When a federation node is syncing with other nodes in the federation it will need to have at least 25 unique patients in the DEM for the sync to be sent.
 * Additional Statistical tests will be performed on each feature between each sync to ensure that no information is leaked. If one of these tests do not pass a node will not send their sync. These tests are protecting against information that a malicious user could possibly compute by comparing the current synchronization DEM with the previous synchronization DEM for a given peer.
 
 ### Additional Statistical Tests
 
-This section describes the univariate statistical test that are performed on each attribute of your dataset when Hipaa compliance is enabled in a federated learning project.
+This section describes the univariate statistical test that are performed on each attribute of your dataset when HIPAA compliance is enabled in a federated learning project.
 
 #### T-Test
 
@@ -116,6 +116,6 @@ The distribution information for the attributes provided along the DEM for $$x$$
 
 Before the SMPC protocol is run to exchange all the peer's DEM, a verification will be made to ensure that the resulting DEM would contain at least 25 patients. No additional statistical test will be run.
 
-## When Hipaa Compliance is not Needed
+## When HIPAA Compliance is not Needed
 
-If your project does not require to be Hipaa compliance, please specify `fed_enforce_hipaa_compliance=false` as part of the **Federation Key Map Value** passed in the message body when using the REST API to create a federation. Please consult either '[Create AWS Backed Federation](federated-learning-api/federated-learning-with-aws-1.md#create-aws-backed-federation)' or '[Create NATS Backed Federation](federated-learning-api/federated-learning-with-nats-1.md#create-nats-backed-federation)' sections for details.
+If your project does not require to be HIPAA compliance, please specify `fed_enforce_hipaa_compliance=false` as part of the **Federation Key Map Value** passed in the message body when using the REST API to create a federation. Please consult either '[Create AWS Backed Federation](federated-learning-api/federated-learning-with-aws-1.md#create-aws-backed-federation)' or '[Create NATS Backed Federation](federated-learning-api/federated-learning-with-nats-1.md#create-nats-backed-federation)' sections for details.

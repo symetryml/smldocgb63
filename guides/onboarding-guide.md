@@ -93,6 +93,6 @@ The following URL contains links to sample code: [_SymetryML Examples_](https://
 
 #### _SymetryML Admin Users Guide._
 
-The [SymetryML Admin CLI](untitled.md) is a command-line application that allows administrators to manage service updates and user credentials. This user guide describes the common usage patterns for the SymetryML Admin CLI.
+The [SymetryML Admin CLI](admin-user-guide.md) is a command-line application that allows administrators to manage service updates and user credentials. This user guide describes the common usage patterns for the SymetryML Admin CLI.
 
 ###

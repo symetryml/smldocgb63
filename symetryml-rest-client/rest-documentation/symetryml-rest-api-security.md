@@ -10,7 +10,7 @@ Message authentication code (MAC) provides a way to verify the integrity of info
 
 The SymetryML REST API uses the HTTP Authorization header to pass authentication information to the server. The header contains the information in the following table.
 
-The most common MAC algorithms are Hash-based Message Authentication Code-Message Data 5 (HMAC-MD5) and HMAC-SHA2. The algorithm used in the SymetryML REST API is HMAC-SHA2, as specified in RFC 4868. For examples of how to sign your REST request, see [Appendix B](https://github.com/symetryml/smldocgb/blob/master/symetry-rest/rest-documentation/appendix-b-sample-code.md).
+The most common MAC algorithms are Hash-based Message Authentication Code-Message Data 5 (HMAC-MD5) and HMAC-SHA2. The algorithm used in the SymetryML REST API is HMAC-SHA2, as specified in RFC 4868.
 
 | Header                    | Description                                                                                                                                                                                                                                     |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

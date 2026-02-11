@@ -6,7 +6,7 @@ After you create a project, you can build models. Using models, you can leverage
 
 To create a new model:
 
-Right-click the **Exploration** icon in the project tree, and then click the appropriate model for you needs.
+Right-click the **Exploration** icon in the project tree, and then click the appropriate model for your needs.
 
 ![Project Create Model](../../.gitbook/assets/project\_create.png)
 
@@ -22,7 +22,7 @@ After completing the model-building process, double click on the model icon to s
 
 ## Model Build Parameters
 
-Most of the SML models allow for model specific options to be enabled before building. One example of such option is the **pseudo matrix inverse**. With **pseudo inverse** enabled, a linear model, which would typically not be build due to matrix non invertibility, can be created by the user. However, such model is likely to be unstable and therefore this option should only be used by advanced users.
+Most of the SML models allow for model specific options to be enabled before building. One example of such option is the **pseudo matrix inverse**. With **pseudo inverse** enabled, a linear model, which would typically not be built due to matrix non invertibility, can be created by the user. However, such model is likely to be unstable and therefore this option should only be used by advanced users.
 
 ![Model Build Parameters](../../.gitbook/assets/create\_model\_lda.png)
 
@@ -49,6 +49,43 @@ The available task options are based on the type of project selected. **Binary C
 ![Auto Select - Task Types](../../.gitbook/assets/auto\_select\_types.png)
 
 For more information detailing the **Search Heuristic,** **Search Space, Optimization Metric** see section on [SymetryML Concepts - Model Select](symetryml-concepts.md#selecting-models)
+
+### Genetic Algorithm Selector (Experimental)
+
+The Genetic Algorithm selector uses evolutionary optimization to search for the optimal feature subset. It maintains a population of candidate feature sets and evolves them through selection, crossover, and mutation operations.
+
+Key parameters include:
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| **genetic\_population\_size** | 50 | Number of candidate solutions in each generation |
+| **genetic\_num\_generations** | 100 | Maximum number of generations to evolve |
+| **genetic\_mutation\_rate** | 0.05 | Probability of mutating each feature in a candidate |
+| **genetic\_crossover\_rate** | 0.8 | Probability of performing crossover between parents |
+| **genetic\_elite\_count** | 2 | Number of top candidates preserved unchanged each generation |
+| **genetic\_tournament\_size** | 3 | Number of candidates competing in tournament selection |
+| **genetic\_initial\_feature\_prob** | 0.1 | Probability of including each feature in the initial population |
+| **genetic\_min\_features** | 1 | Minimum number of features in any candidate |
+| **genetic\_max\_features** | (all) | Maximum number of features (unlimited by default) |
+| **genetic\_parallel\_threads** | 4 | Number of parallel threads for model evaluation |
+| **genetic\_stagnation\_limit** | 20 | Stop if no improvement after this many generations |
+
+### Bayesian Optimization Selector (Experimental)
+
+The Bayesian Optimization selector uses probabilistic surrogate modeling with an Upper Confidence Bound (UCB) acquisition function to efficiently explore the feature space.
+
+Key parameters include:
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| **bayesian\_num\_iterations** | 100 | Total number of feature subsets to evaluate |
+| **bayesian\_initial\_random** | 20 | Number of random evaluations before switching to surrogate model |
+| **bayesian\_exploration\_weight** | 0.1 | UCB exploration weight (higher = more exploration) |
+| **bayesian\_num\_candidates** | 100 | Number of candidate points evaluated by acquisition function |
+| **bayesian\_local\_search\_steps** | 10 | Number of local search steps per iteration |
+| **bayesian\_embedding\_dim** | 50 | Dimensionality of the feature embedding |
+| **bayesian\_top\_k\_memory** | 200 | Number of top evaluations retained in memory |
+| **bayesian\_stagnation\_limit** | 30 | Stop if no improvement after this many iterations |
 
 ## Clone Model
 
@@ -124,7 +161,7 @@ After the assessment process finishes, a dialog box asks whether you want to see
 
 ## Export/Import Models
 
-Once built, a model can be exported out of a project and later imported into a different project. This allows for workflows in which a production environment can be completely separate from a development environment while this levering models build in the latter.
+Once built, a model can be exported out of a project and later imported into a different project. This allows for workflows in which a production environment can be completely separate from a development environment while leveraging models built in the latter.
 
 ![Model Export](../../.gitbook/assets/model\_export.png)
 

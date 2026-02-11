@@ -16,7 +16,7 @@ A Markov Chain (MC) is a graphical representation of a sequence of states and th
 
 ### Hidden Markov Model
 
-Like the MC, a Hidden Markov Model (HMM) is a graphical model describing the probabilities of transitioning from one state to another. It extends the Markov process by focusing on two set of states:
+Like the MC, a Hidden Markov Model (HMM) is a graphical model describing the probabilities of transitioning from one state to another. It extends the Markov process by focusing on two sets of states:
 
 * Observed
 * Hidden
@@ -142,7 +142,7 @@ Select an input data source.
 
 ![Input selection](../.gitbook/assets/sml\_hmm\_pred\_0.png)
 
-Select and output data source.
+Select an output data source.
 
 ![Output selection](../.gitbook/assets/sml\_hmm\_pred\_1.png)
 

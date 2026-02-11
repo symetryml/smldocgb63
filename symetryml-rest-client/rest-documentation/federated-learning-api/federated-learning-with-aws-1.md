@@ -66,12 +66,12 @@ POST /symetry/rest/{cid}/fedml/{pid}/getEncrypted
 
 **Get Encrypted Body Key Map Value.**
 
-TDB new ResponseEntityKey.
+TBD new ResponseEntityKey.
 
 | Mandatory key       | Required / Optional | Value Description                                     |
 | ------------------- | ------------------- | ----------------------------------------------------- |
 | **passwd**          | Required            | Password to use to encrypt the federation information |
-| **fed\_rest\_host** | Required            | Hostname where admin can be reach at.                 |
+| **fed\_rest\_host** | Required            | Hostname where admin can be reached at.                 |
 
 ### HTTP Responses
 
@@ -109,7 +109,7 @@ Response:
 
 ### Decrypted Message Example:
 
-Once decrypted the Federation info will contains information like in the following example. This is basically a map with a few key/ value pair. These key value pairs must be used when joining a federation. See [section](./#mandatory-key-value-pairs-from-federation-admin) for details.
+Once decrypted the Federation info will contain information like in the following example. This is basically a map with a few key/ value pair. These key value pairs must be used when joining a federation. See [section](./#mandatory-key-value-pairs-from-federation-admin) for details.
 
 ```
 Decrypted JSON:
@@ -145,7 +145,7 @@ The request body is composed of 2 types of key/value pairs:
 
 #### Mandatory Key / Value Pairs from Federation Admin
 
-The following key value will be received as part of the password encrypted json message from the federation admin. They need to be added the the query body without modification.
+The following key value will be received as part of the password encrypted json message from the federation admin. They need to be added to the query body without modification.
 
 | Mandatory key        | Value Description                                                                                                       |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------- |
