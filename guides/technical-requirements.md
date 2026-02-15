@@ -6,28 +6,18 @@ Copyright © 2026 by Symetry, Inc. 14 Pine Street, Ste 6 Morristown, NJ 07960 Al
 
 ### Technical Requirement for SymetryML
 
-| Requirement        | Description                                                |
-| ------------------ | ---------------------------------------------------------- |
-| Operating System   | Centos 7.x or Amazon Linux Based on Red Hat 7.x            |
-| Application Server | Certified with Jetty 9.4.49                                |
-| Additional Drivers | CUDA version 10 or up                                      |
-| GPU                | NVIDIA Tesla or GPU with minimum compute capability of 3.0 |
-| Spark              | Spark 2.4.x                                                |
-| Java               | Java 11                                                    |
-| Redis              | Redis 2.8.x and up                                         |
+| Requirement      | Description                                                                                  |
+| ---------------- | -------------------------------------------------------------------------------------------- |
+| Docker Engine    | Docker Engine installed on the host                                                          |
+| Operating System | Any Linux distribution that supports Docker                                                  |
+| GPU (optional)   | NVIDIA GPU with Compute Capability >= 3.5, NVIDIA drivers, and NVIDIA Container Toolkit      |
+| Spark (optional) | External Spark 4.1.0 cluster                                                                 |
 
 ### System Recommendations
 
 | Recommendation              | Description                               |
 | --------------------------- | ----------------------------------------- |
 | Spark Cluster worker memory | Minimum: 8 GB Recommended: 16 GB and more |
-
-### GPU Support
-
-| GPU Support  | Description       |
-| ------------ | ----------------- |
-| CUDA library | CUDA Version 10.x |
-| Intel MKL    | Version 11.0+     |
 
 ## SymetryML Memory Requirements
 
