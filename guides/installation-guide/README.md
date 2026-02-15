@@ -26,15 +26,11 @@ SymetryML is hosted on Amazon ECR. To pull the image, first authenticate with th
 
 **Step 1 — Authenticate with ECR**
 
-Use the AWS CLI to obtain an authentication token and log in to Docker:
+SymetryML will provide you with a 12 hours valid token that you can assign to an environment variable (`ZTOKEN`) and then login to the SymetryML Elastic Container Registry (ECR) with the following command:
 
 ```bash
-aws ecr get-login-password --region us-east-1 | \
-  docker login --username AWS --password-stdin \
-  428117700962.dkr.ecr.us-east-1.amazonaws.com
+docker login -u AWS -p $ZTOKEN 428117700962.dkr.ecr.us-east-1.amazonaws.com
 ```
-
-> If you do not have AWS CLI access, contact Symetry at support@symetryml.net for an authentication token.
 
 **Step 2 — Pull the image**
 
