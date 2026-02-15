@@ -4,184 +4,31 @@ Copyright © 2026 by Symetry, Inc. 14 Pine Street, Ste 6 Morristown, NJ 07960 Al
 
 ## Introduction
 
-### Assumptions
+SymetryML is delivered as a Docker image with Spark 4.1.0 support pre-configured. All required libraries, jars, and configuration files are included in the container — no manual Spark setup is needed inside the SymetryML Docker image.
 
-* You have a working installation of SymetryML with Jetty. For information about performing this task, refer to the [Installation Guide](./).
-* Make sure that all the required libraries are in your `/opt/symetry/nativelib` folder and that your `LD_LIBRARY_PATH` is set correctly. Additionally, if you need graphics processor unit (GPU) support, refer to the [Installation Guide - GPU](gpu-installation-guide.md) and to [GPU Information](spark-installation-guide.md#gpu-information) in this guide.
-* Working installation of Spark on the same machine where the Jetty Web server is installed. SymetryML is certified to work with `Spark 2.4.5 hadoop 2.7,` `Spark 2.4.6 hadoop 2.7`, `Spark 3.0.1 hadoop 2.7` and `Spark 3.0.2 hadoop 3.2`.
+This guide covers the requirements for connecting SymetryML to an external Spark cluster.
+
+## Prerequisites
+
+* A working Spark 4.1.0 cluster accessible from the SymetryML Docker container.
+* Network connectivity between the SymetryML container and all Spark master and worker nodes.
 
 ## System Requirements
 
 | Requirement                 | Description                                                                                                                                                                                                      |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GPU Support                 | Currently certified on CUDA 10.x with NVIDIA GPU with Compute Capability >= 3.5. Consult the [GPU Information](spark-installation-guide.md#gpu-information) for more information.                                |
+| Spark Cluster               | Spark 4.1.0 cluster accessible from the SymetryML Docker container.                                                                                                                                             |
 | Spark Master                | 24 to 32 cores computer with high-speed Internet connection.                                                                                                                                                     |
 | Spark Cluster worker memory | Minimum: 8 GB Recommended: 16 GB Start the number of workers on your node based on the amount of worker memory. For example, on Amazon S3: \* c5.8xlarge instance: 8 workers. \* c5.4xlarge instance: 4 workers. |
 
-## Spark Information
+## GPU Support on Spark Workers
 
-### SymetryML Spark Files
+If you plan to use SymetryML GPU or Multi-GPU projects on your Spark cluster, each worker node must have NVIDIA GPU support:
 
-| Type | Name           | Description                                                                                                                                              |
-| ---- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| File | symetry.tar.gz | Contains files that the SymetryML REST application needs to communicate with a Spark cluster. This archive file should be decompressed in `/opt/symetry` |
+* NVIDIA GPU with Compute Capability >= 3.5
+* CUDA drivers installed and verified (run `nvidia-smi` to confirm)
 
-Once the `symetry.tar.gz` file is decompressed, you should get the following in your `/opt/symetry/` folder. The `lib` and `libExt` contain the files that are needed to communicate with a spark cluster using the various _spark driver applications_ - `spark-submit`, `spark-shell`, `pyspark` or the SML web application inside of Jetty.
-
-```
-├── lib
-│   └── sym-spark-assembly.jar
-├── libExt
-│   ├── commons-pool2-2.0.jar
-│   ├── jedis2.8.5.jar
-│   ├── sym-core.jar
-│   ├── sym-dao.jar
-│   ├── sym-spark.jar
-│   └── sym-util.jar
-├── nativelib
-│   ├── libblas.so -> libmkl_rt.so
-│   ├── libblas.so.3 -> libmkl_rt.so
-│   ├── libiomp5.so
-│   ├── liblapack.so -> libmkl_rt.so
-│   ├── liblapack.so.3 -> libmkl_rt.so
-│   ├── libmkl_avx.so
-│   ├── libmkl_core.so
-│   ├── libmkl_def.so
-│   ├── libmkl_gnu_thread.so
-│   ├── libmkl_intel_lp64.so
-│   ├── libmkl_intel_thread.so
-│   ├── libmkl_rt.so
-│   └── libsym-gpu.so
-├── plugins
-│   ├── csv2.dsplugin
-│   ├── ds-plugin-csv2.jar
-│   └── mysql-connector-java-5.1.36-bin.jar
-├── python
-│   ├── SMLDataFrameUtil.py
-│   ├── SMLProjectUtil.py
-│   └── SMLPy4JGateway.py
-├── spark-support
-│   ├── spark2.4.5
-│   │   └── lib -> /opt/spark-2.4.5-bin-hadoop2.7/jars
-│   ├── spark2.4.6
-│   │   └── lib -> /opt/spark-2.4.6-bin-hadoop2.7/jars
-│   ├── spark3.0.1
-│   │   └── lib -> /opt/spark-3.0.1-bin-hadoop2.7/jars
-│   ├── spark3.0.2
-│   │   └── lib -> /opt/spark-3.0.2-bin-hadoop3.2/jars
-│   └── spark-redshift-community
-│       └── scala_2.11
-│           └── version_4.0.1
-│               ├── com.amazonaws_aws-java-sdk-1.7.4.jar
-│               ├── com.eclipsesource.minimal-json_minimal-json-0.9.4.jar
-│               ├── com.fasterxml.jackson.core_jackson-annotations-2.2.3.jar
-│               ├── com.fasterxml.jackson.core_jackson-core-2.2.3.jar
-│               ├── com.fasterxml.jackson.core_jackson-databind-2.2.3.jar
-│               ├── commons-codec_commons-codec-1.4.jar
-│               ├── commons-logging_commons-logging-1.1.3.jar
-│               ├── io.github.spark-redshift-community_spark-redshift_2.11-4.0.1.jar
-│               ├── joda-time_joda-time-2.10.6.jar
-│               ├── org.apache.hadoop_hadoop-aws-2.7.7.jar
-│               ├── org.apache.httpcomponents_httpclient-4.2.5.jar
-│               ├── org.apache.httpcomponents_httpcore-4.2.5.jar
-│               ├── org.apache.spark_spark-avro_2.11-2.4.2.jar
-│               ├── org.slf4j_slf4j-api-1.7.5.jar
-│               ├── org.spark-project.spark_unused-1.0.0.jar
-│               └── RedshiftJDBC42-no-awssdk-1.2.36.1060.jar
-```
-
-## Additional SymetryML Configuration for Spark Support
-
-SymetryML relies on the existence of symbolic link (`/opt/symetry/spark-support/spark2.4.5/lib`) that points to your `$SPARK_HOME/jars` folder. Just make sure to create the symbolic link so that it points to the jars folder inside you spark installation:
-
-Example with Spark 2.4.5 using hadoop 2.7:
-
-```
-(base) johndoe$ pwd
-/opt/symetry/spark-support/spark2.4.5
-(base) johndoe$ ls -l
-total 0
-lrwxr-xr-x  1 neil  wheel  53  4 Mar 09:00 lib -> /opt/spark-2.4.5-bin-hadoop2.7/jars
-```
-
-## Additional Jars Needed for Spark
-
-SymetryML needs additional jars to be able to access files on AmazonS3. These files needs to be put in `$SPARK_HOME/jars` folder. Depending on the version of Spark you are using you will need to put different jars file there.
-
-### Spark 2.4.x with Hadoop 2.7
-
-* Add the following jars to the `$SPARK_HOME/jars` folder. Make sure their version matches the version of `hadoop-common-HADOOP_VERSION.jar` in the `$SPARK_HOME/jars` folder: e.g. `hadoop-common-2.7.4.jar` for instance.
-  * `hadoop-aws-2.7.4.jar`
-  * `hadoop-azure-2.7.4.jar`
-* Add the following jars to the `$SPARK_HOME/jars` folder:
-* `aws-java-sdk-1.7.4.jar`
-* `jets3t-0.9.4.jar`
-* `azure-storage-3.1.0.jar`
-* `xbean-asm6-shaded-4.10.jar`: For this one you will need to replace the pre-existing `xbean-asm6-shaded-4.8.jar` with `xbean-asm6-shaded-4.10.jar`. There is a bug in the `xbean-asm6-shaded-4.8.jar` when trying to access S3 files.
-
-### Spark 3.0.x with Hadoop 2.7
-
-* Add the following jars to the `$SPARK_HOME/jars` folder. Make sure their version matches the version of `hadoop-common-HADOOP_VERSION.jar` in the `$SPARK_HOME/jars` folder: e.g. `hadoop-common-2.7.4.jar` for instance.
-  * `hadoop-aws-2.7.4.jar`
-  * `hadoop-azure-2.7.4.jar`
-* Add the following jars to the `$SPARK_HOME/jars` folder:
-* `aws-java-sdk-1.7.4.jar`
-* `jets3t-0.9.4.jar`
-* `azure-storage-3.1.0.jar`
-
-### Spark 3.0.x with Hadoop 3.2
-
-* Add the following jars to the `$SPARK_HOME/jars` folder. Make sure their version matches the version of `hadoop-common-HADOOP_VERSION.jar` in the `$SPARK_HOME/jars` folder: e.g. `hadoop-common-3.2.0.jar` for instance.
-  * `hadoop-aws-3.2.0.jar`
-  * `hadoop-azure-3.2.0.jar`
-* Add the following jars to the `$SPARK_HOME/jars` folder:
-* `aws-java-sdk-bundle-1.11.375.jar`
-* `jets3t-0.9.4.jar`
-* `azure-storage-8.6.6.jar`
-
-## Spark Cluster Configuration
-
-For information about configuring your Spark Cluster, refer to your Spark documentation. SymetryML assumes that you have an up and running Spark cluster.
-
-## GPU Information
-
-### GPU Processing Support on Spark Worker
-
-You can use a GPU on each worker node in your Spark cluster. If you do, be sure to install all required NVIDIA GPU drivers on each worker node in your cluster. This process is described in the next section.
-
-#### Additional GPU Steps on Spark Worker
-
-Perform the following procedure to configure the nodes that will be running your spark worker for use with the NVIDIA GPU. This applies to linux.
-
-Download Cuda 10.x from [https://developer.nvidia.com/](https://developer.nvidia.com/)
-
-1. Install CUDA, and then use the nvidia-smi command to verify that CUDA is working.
-2. Make sure that your Spark Worker `/opt/symetry/nativelib` contains the same `.so` as your SymetryML host server. Please consult the [SymetryML Installation Guide](./) for more information
-3. Be sure that Jetty user `LD_LIBRARY_PATH` is set correctly like in the following:
-
-```
-# download cuda
-wget http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run
-
-# run the installer
-chmod +x cuda_10.2.89_440.33.01_linux.run
-./cuda_10.2.89_440.33.01_linux.run
-nvdia-smi
-# edit /home/jetty/.bashrc
-sudo su jetty
-cd
-emacs .bashrc
-# /home/jetty/.bashrc additional entries
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/opt/symetry/nativelib
-export LD_LIBRARY_PATH
-```
-
-#### GPU Support
-
-| GPU Support  | Description                                |
-| ------------ | ------------------------------------------ |
-| CUDA library | Currently certified on CUDA 10.x           |
-| Intel MKL    | Working with MKL version 11.0.0 and higher |
+For detailed GPU setup instructions, refer to the [Installation Guide - GPU](gpu-installation-guide.md).
 
 ## Spark FAQs
 
