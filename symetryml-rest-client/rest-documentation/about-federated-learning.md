@@ -183,7 +183,7 @@ Besides creating and joining a federation via rest endpoints, other operations a
 ### Limitation of Federated Project
 
 * Features hashing is not available
-* By default Random Forest model are disabled. It can be enabled by change the SymetryML server configuration. For details please see the `rtlm.option.sml.fed.strict.mode` key in [Installation guide configuration](../../guides/installation-guide/#about-the-symetryml-configuration) section.
+* By default Random Forest model are disabled. It can be enabled by change the SymetryML server configuration. For details please see the `rtlm.option.sml.fed.strict.mode` key in [Installation Guide - SymetryML REST Configuration](../../guides/installation-guide/#symetryml-rest-configuration) section.
 * If your project has more than 2000 attributes you should be careful on how frequently you sync your projects. Please consult the [Federation Terminology](about-federated-learning.md#federation-terminology) section for more information.
 
 | Federated Project Actions                                                                                     | Definition                                                                                                                                                                                                                                                            |

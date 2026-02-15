@@ -196,7 +196,7 @@ BODY:
 | **sml\_project\_power\_max**    | Float   | maximum power to use                    |
 | **sml\_project\_power\_steps**  | Integer | steps between minimum and maximum power |
 
-Power transformation prefix and suffix can be configured in the `/opt/symetry/symetry-rest.txt` configuration file. Please consult the [Installation Guide Symetry Control Configuration](../../guides/installation-guide/#about-the-symetryml-configuration) for details on configuring that file.
+Power transformation prefix and suffix can be configured in the `symetry-rest.txt` configuration file. Please consult the [Installation Guide - SymetryML REST Configuration](../../guides/installation-guide/#symetryml-rest-configuration) for details on configuring that file.
 
 | Parameter                           | Description      |
 | ----------------------------------- | ---------------- |
