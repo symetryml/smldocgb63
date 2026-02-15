@@ -4,65 +4,26 @@ Copyright © 2026 by Symetry, Inc. 14 Pine Street, Ste 6 Morristown, NJ 07960 Al
 
 ## Introduction
 
-### Assumptions
+SymetryML supports GPU and Multi-GPU projects for hardware-accelerated machine learning on wide datasets. The SymetryML Docker image includes all required CUDA libraries and native libraries pre-installed — no manual GPU software setup is needed inside the container.
 
-* You have a working installation of SymetryML with Jetty. For information about performing this task, refer to the [Installation Guide](./).
-* Your SymetryML license allows you to use GPU or MultiGPU SymetryML projects.
+To use GPU acceleration, the **host machine** must have NVIDIA drivers and the NVIDIA Container Toolkit installed.
 
-### GPU Support Requirements
+## Prerequisites
 
-| Requirement      | Description                                                     |
-| ---------------- | --------------------------------------------------------------- |
-| CUDA Library     | The SymetryML software is currently certified CUDA Version 10.x |
-| Operating System | CentOS 7.x or Amazon Linux based on RedHat 7.x.                 |
-| Supported GPUs   | NVIDIA GPU with Compute Capability >= 3.5                       |
+* A working SymetryML Docker installation. Refer to the [Installation Guide](./) for setup instructions.
+* A SymetryML license that allows GPU or Multi-GPU projects.
+* NVIDIA GPU with Compute Capability >= 3.5 on the host.
+* NVIDIA drivers installed on the host.
+* NVIDIA Container Toolkit installed on the host.
 
-## Configuration Information
+## Host Setup
 
-SymetryML is a Java software that relies on certain native library (.so files) to work in tandem with NVIDIA GPU.
+### Step 1 — Verify NVIDIA Drivers
 
-### Using SymetryML Native Library
-
-As mentioned in the [Installation Guide](./) once you decompress the `symetry.tar.gz` archive into `/opt/symetry`, you will install the necessary libraries to use NVIDIA gpus into the `/opt/symetry/nativelib` folder. Your `/opt/symetry/nativelib` folder should look like that:
-
-```bash
-├── nativelib
-│   ├── libblas.so -> libmkl_rt.so
-│   ├── libblas.so.3 -> libmkl_rt.so
-│   ├── libiomp5.so
-│   ├── liblapack.so -> libmkl_rt.so
-│   ├── liblapack.so.3 -> libmkl_rt.so
-│   ├── libmkl_avx.so
-│   ├── libmkl_core.so
-│   ├── libmkl_def.so
-│   ├── libmkl_gnu_thread.so
-│   ├── libmkl_intel_lp64.so
-│   ├── libmkl_intel_thread.so
-│   ├── libmkl_rt.so
-│   └── libsym-gpu.so
-```
-
-Additionally To make SymetryML works with GPU perform the following:
-
-1. Download CUDA 10 or 11 from [NVIDIA](https://developer.nvidia.com/cuda-toolkit)
-2. Install CUDA, and then use the `nvidia-smi` command to verify that CUDA is working. Example for Centos 7:
+Run `nvidia-smi` on the host to confirm that NVIDIA drivers are installed and your GPU is detected:
 
 ```
-# download cuda
-wget http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run
-
-# run the installer
-chmod +x cuda_10.2.89_440.33.01_linux.run
-./cuda_10.2.89_440.33.01_linux.run
-
-# verify that CUDA was correctly installed
-nvdia-smi
-```
-
-1. After a successful CUDA installation `nvidia-smi` should output something like:
-
-```
-[user@symetry ~]# nvidia-smi
+$ nvidia-smi
 Fri May 26 11:32:04 2023
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 510.47.03    Driver Version: 510.47.03    CUDA Version: 11.6     |
@@ -85,36 +46,40 @@ Fri May 26 11:32:04 2023
 +-----------------------------------------------------------------------------+
 ```
 
-1. Be sure that `jetty` user `LD_LIBRARY_PATH` is set correctly.
+If `nvidia-smi` is not found or does not show your GPU, install the appropriate NVIDIA drivers for your host OS before continuing.
 
-```
-# edit /home/jetty/.bashrc
-sudo su jetty
-cd
-emacs .bashrc
+### Step 2 — Install NVIDIA Container Toolkit
 
-# Add the following lines to /home/jetty/.bashrc
-ANT_HOME=/opt/ant
-export ANT_HOME
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/opt/symetry/nativelib
-export LD_LIBRARY_PATH
+The NVIDIA Container Toolkit allows Docker to access the host's GPUs. Install it following the [official NVIDIA Container Toolkit installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
+
+After installation, restart Docker:
+
+```bash
+sudo systemctl restart docker
 ```
 
-If you encounter problem please do the following:
+## Running SymetryML with GPU
 
-1. Use tool like `ldd /opt/system/nativelib/lib-symgpu.so` to pinpoint dynamic any linker problems. Make sure to run the command as the `jetty` user.
-2. Make sure the `jetty` user `LD_LIBRARY_PATH` environment variable is correctly set.
+To run SymetryML with GPU support, use the `runtime: nvidia` option and GPU environment variables in your `docker-compose.yml`. Refer to the [GPU Support section of the Installation Guide](./#gpu-support) for the full Docker Compose example.
 
-### SymetryML Memory Requirements
+The key settings are:
 
-Please consults the [Technical Requirements](../technical-requirements.md) for more information on memory requirement for various project sizes. Note that with SymetryML, project size is determined by the number of attributes not the number of rows.
+| Setting                    | Value                                              | Description                           |
+| -------------------------- | -------------------------------------------------- | ------------------------------------- |
+| `runtime`                  | `nvidia`                                           | Enables GPU access in the container   |
+| `NVIDIA_VISIBLE_DEVICES`   | `all`                                              | Exposes all host GPUs to the container |
+| `LD_LIBRARY_PATH`          | `/usr/local/cuda/lib64:/opt/symetry/nativelib`     | CUDA and native library paths          |
 
-### SymetryML Configuration and GPU
+## SymetryML Memory Requirements
 
-As documented in the [Installation Guide](./), the `/opt/symetry/symetry-rest.txt` configuration file contains various properties that alter the SymetryML behavior. The following table lists the properties that are relevant to using SymetryML with NVIDIA GPUs.
+Please consult the [Technical Requirements](../technical-requirements.md) for more information on memory requirements for various project sizes. Note that with SymetryML, project size is determined by the number of attributes, not the number of rows.
 
-| Property                              | Description                                                                                                                                                                                                    |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+## SymetryML Configuration and GPU
+
+The `symetry-rest.txt` configuration file contains properties that control SymetryML GPU behavior. The following table lists the properties relevant to using SymetryML with NVIDIA GPUs.
+
+| Property                               | Description                                                                                                                                                                                                    |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `rtlm.option.rtlm.gpu.matrix.minsize` | Minimum matrix size to use GPU. Matrix operations like multiplication, inversion, etc are used when SymetryML builds models. Other operation like PCA and SVD also can leverage GPU.  Recommended values : 512 |
 | `rtlm.option.rtlm.gpu.update.minsize` | Minimum size to use GPU when updating a SymetryML project.  Recommended values:64 to 128                                                                                                                       |
 | `rtlm.mgpu.num.gpus`                  | The maximum number of GPUs that can be used on a server in a MultiGPU project.                                                                                                                                 |
