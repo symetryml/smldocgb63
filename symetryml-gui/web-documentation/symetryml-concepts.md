@@ -13,11 +13,53 @@ For a detailed description of SymetryML REST Client and how it can help you simp
 
 ## Authentication
 
-Authentication with the SymetryML application is achieved using a predefined user ID and security key. The randomly generated security key was given to you when you initially registered for the application.
+### SymetryML Authentication
+
+Authentication with the SymetryML application is achieved using a predefined user ID and security key. The randomly generated security key is issued during the initial registration process.
 
 ![Login Prompt](../../.gitbook/assets/login\_screen.png)
 
-If this is your first time registering, use the user ID **admin** and user secret key **admin**. Click **Sign In**. The system redirects you to the registration section of SymetryML GUI that will guide you through the registration process. The process of generating these credentials is described in [_SymetryML Admin User Guide_](../../guides/admin-user-guide.md).
+#### Initialization
+
+If this is your first time signing in, use the user ID **root** and password **root**. Click **Sign In**. The system redirects you to the registration section of SymetryML GUI that will guide you through the registration process.
+
+![Registration Page](../../.gitbook/assets/auth\_init\_user\_1.png)
+
+On the registration page, you will create the root user account.
+
+![Create Root User](../../.gitbook/assets/auth\_init\_user\_2.png)
+
+This account has elevated privileges, including the ability to create or delete other users. Leave all expiration fields set to **0** to ensure this account does not expire.
+
+After completing the form, your credentials will be displayed, including your secret key.
+
+![User Credentials](../../.gitbook/assets/auth\_init\_user\_3.png)
+
+> Store these credentials in a secure location. If needed, credentials can be retrieved by following the [_SymetryML Admin User Guide_](../../guides/admin-user-guide.md).
+
+Clicking **Finish** will redirect you to the login page.
+
+#### User Management
+
+When logged in as the root user, an **Admin** combo button appears in the top right corner of the interface. Click the dropdown arrow to reveal available options, then select **Users**.
+
+![Admin Dropdown](../../.gitbook/assets/user\_manage\_1.png)
+
+The User Management panel will appear.
+
+![User Management Panel](../../.gitbook/assets/user\_manage\_2.png)
+
+From here, you can add new users or remove existing ones.
+
+To add a user, click the **Add** button and fill in the required fields.
+
+![Add User](../../.gitbook/assets/user\_manage\_3.png)
+
+To remove a user, select the user from the list and click the **Delete** button.
+
+![Remove User](../../.gitbook/assets/user\_manage\_5.png)
+
+User management can also be performed via the command line. For more information, refer to the [_SymetryML Admin User Guide_](../../guides/admin-user-guide.md).
 
 ### Single Sign-On (SSO) Authentication
 
@@ -26,6 +68,8 @@ SymetryML also supports Single Sign-On (SSO) authentication, allowing users to a
 * **OIDC (OpenID Connect)** -- Compatible with providers such as Auth0, AWS Cognito, Okta, and any OIDC-compliant identity provider.
 * **LDAP** -- Compatible with AWS Simple AD, Active Directory, OpenLDAP, and any LDAP v3 directory service.
 
+#### Initialization
+
 When SSO is enabled, the login flow is as follows:
 
 1. The user authenticates through their organization's SSO provider.
@@ -33,6 +77,10 @@ When SSO is enabled, the login flow is as follows:
 3. These credentials are then used for standard HMAC-SHA2 authenticated API calls.
 
 > SSO is available in SymetryML 6.2.0 and later. For detailed SSO configuration instructions (including OIDC and LDAP setup parameters), refer to the [SymetryML REST API Security](../../symetryml-rest-client/rest-documentation/symetryml-rest-api-security.md) documentation.
+
+#### User Management
+
+Under the SSO authentication scheme, users are managed externally through the organization's identity provider. User provisioning, deprovisioning, and access control are handled by the SSO provider rather than within SymetryML directly.
 
 ## SymetryML GUI
 
