@@ -4,197 +4,150 @@ Copyright © 2026 by Symetry, Inc. 14 Pine Street, Ste 6 Morristown, NJ 07960 Al
 
 ## Introduction
 
-This guide describes how to install, upgrade and configure the SymetryML suite of applications. For simplicity, the application comes prepackaged with Jetty 9.4.49. For additional information, refer to the following documents:
+SymetryML is delivered as a Docker image with all dependencies pre-configured, including the application server, Redis, native math libraries, and Spark support. This guide describes how to install, update, and configure SymetryML. For additional information, refer to the following documents:
 
 * [SymetryML Technical Requirements](../technical-requirements.md)
 * [Installation Guide - Spark](spark-installation-guide.md)
 * [Installation Guide - GPU](gpu-installation-guide.md)
 * [ML Toolkit](../../symetryml-gui/web-documentation/)
 
-### Files in the SymetryML Package
+## Prerequisites
 
-The following table lists the files in the SymetryML-6.1.tar.gz package.
+Before installing SymetryML, ensure the following are in place:
 
-| Type   | Name                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| File   | jetty                               | `/etc/init.d/` Linux service file.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| Folder | jetty-distribution-9.4.49.v20220914 | Contains a fully functioning Jetty application with pre-installed SymetryML application in the webapps folder.                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| File   | README.txt                          | List all files in this release.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| File   | Release-Notes.txt                   | Release Note.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| File   | symetry.tar.gz                      | <p>Archive file that contains support files needed by SymetryML. It should normally be decompressed in the <code>/opt/symetry</code> directory. Those support files are needed to:<br></p><p>- communicate with a Spark cluster.<br>- support native GPU support<br>- use SymetryML with Python</p><p>- run a Symetry Kafka Stream Application<br></p><p>Please consult the installation guide for <a href="spark-installation-guide.md">Spark</a> and <a href="gpu-installation-guide.md">GPU</a> for additional details.</p> |
+* **Docker Engine** installed on the host machine.
+* **SymetryML license file** (`sym.lic`) provided by Symetry.
+* (Optional) **NVIDIA Container Toolkit** if using GPU or Multi-GPU projects — see the [GPU Installation Guide](gpu-installation-guide.md).
+* (Optional) **External Spark 4.1.0 cluster** — see the [Spark Installation Guide](spark-installation-guide.md).
 
-## Installation
+## Pulling the Docker Image
 
-### Assumptions
+SymetryML is hosted on Amazon ECR. To pull the image, first authenticate with the registry, then pull.
 
-This section assumes you have the following files:
+**Step 1 — Authenticate with ECR**
 
-* SymetryML package: `SymetryML-{VERSION}-tar.gz`
-* SymetryML license file: `sym.lic`.
-* Redis with version greater or equal to 2.8.19 installed and available at port 6379 - or available on another computer
-  * please see `rtlm.option.rtlm.db.redis.host` and `rtlm.option.rtlm.db.redis.port` in [About the SymetryML Configuration ](./#about-the-symetryml-configuration)section for additional configuration help.
-* Java JDK 11 is installed.
+SymetryML will provide you with a 12 hours valid token that you can assign to an environment variable (`ZTOKEN`) and then login to the SymetryML Elastic Container Registry (ECR) with the following command:
 
-### Installation Procedure
-
-After making sure that the base [requirements](../technical-requirements.md#technical-requirements) are covered, perform the following procedure:
-
-1. Decompress SymetryML-6.1-tar.gz.
-2. Add Jetty user:
-   * `useradd jetty`
-   * `usermod -aG wheel jetty`
-3. Add to .bashrc in /home/jetty
-   * `export JAVA_HOME=/opt/jdk`
-   * `export PATH=$JAVA_HOME/bin:$PATH`
-   * `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/symetry/nativelib:/usr/local/cuda/lib64`
-4. cp `jetty-distribution-9.4.49.v20220914` to /opt/.
-5. Allowing jetty to write logs in the sub directory:
-   * `chown -R jetty:jetty jetty-distribution-9.4.49.v20220914`
-6. Create a symbolic link to `jetty-distribution-9.4.49.v20220914` named `/opt/jetty`.
-7. From root directory, decompress the `symetry.tar.gz` file and ensure its contents are in `/opt/symetry`. Please consult the _**directory tree located at the bottom**_ _**of this Installation**_\*\* **\_**Procedure\*\*\_ to ensure your `/opt/symetry` resembles the directory tree illustrated.
-8. Edit /opt/jetty/start.ini to specify where your SymetryML license resides. Add a line similar to the following:
-   * `-Dsym.lic.loc=/opt/symetry/sym.lic`
-9. Move the service file jetty to /etc/init.d
-   * `mv jetty /etc/init.d/`
-10. Add Jetty to the list of Linux services using chkconfig
-    * `chkconfig jetty on`
-11. Start Jetty:
-    * `sudo service jetty start`
-
-Your `/opt/symetry` folder content should resemble the following:
-
-```
-├── lib
-│   └── sym-spark-assembly.jar
-├── libExt
-│   ├── (...) MANY ..jars file needed by SymetryML Rest, please do not modify
-├── nativelib
-│   ├── libblas.so -> libmkl_rt.so
-│   ├── libblas.so.3 -> libmkl_rt.so
-│   ├── libiomp5.so
-│   ├── liblapack.so -> libmkl_rt.so
-│   ├── liblapack.so.3 -> libmkl_rt.so
-│   ├── libmkl_avx.so
-│   ├── libmkl_core.so
-│   ├── libmkl_def.so
-│   ├── libmkl_gnu_thread.so
-│   ├── libmkl_intel_lp64.so
-│   ├── libmkl_intel_thread.so
-│   ├── libmkl_rt.so
-│   └── libsym-gpu.so
-├── plugins
-│   ├── activation-1.1.1.jar
-│   ├── csv2.dsplugin
-│   └── ds-plugin-csv2.jar
-├── python
-│   ├── SMLDataFrameUtil.py
-│   └── SMLProjectUtil.py
-├── spark-support
-│   ├── spark2.4.5
-│   │   └── lib -> /opt/spark-2.4.5-bin-hadoop2.7/jars
-│   ├── spark2.4.6
-│   │   └── lib -> /opt/spark-2.4.6-bin-hadoop2.7/jars
-│   └── spark3.0.1
-│       └── lib -> /opt/spark-3.0.1-bin-hadoop2.7/jars
-│   └── spark3.0.2
-│       └── lib -> /opt/spark-3.0.2-bin-hadoop2.7/jars
-├── sym-kafkastream-app
-│   ├── etc
-│   │   ├── log4j-f.properties
-│   │   └── simple.props
-│   ├── lib
-│   │   ├── MANY ..jars file needed kafka stream application, please do not modify
-│   └── run-ks-app-linux.sh
-├── symetry-admin-cli.jar
-├── symetry-rest.txt
-├── symetry-web.txt
-└── symetry.sh
+```bash
+docker login -u AWS -p $ZTOKEN 428117700962.dkr.ecr.us-east-1.amazonaws.com
 ```
 
-## Updating an Existing System
+**Step 2 — Pull the image**
 
-Make sure to use same version of jetty for this release of SymetryML. That is `jetty-distribution-9.4.49.v20220914`.
+```bash
+docker pull 428117700962.dkr.ecr.us-east-1.amazonaws.com/sml-server:6.3.0
+```
 
-1. Decompress SymetryML-6.1-tar.gz.
-2.  Stop Jetty:
+## Running SymetryML
 
-    ```
-    sudo service jetty stop
-    ```
-3. cp `{SymetryML-6.1.tar.gz}/jetty-distribution-9.4.49.v20220914`/ to `/opt/jetty-distribution-9.4.49.v20220914` 3.1. Create a symbolic link `/opt/jetty` that points to `/opt/jetty-distribution-9.4.49.v20220914`
-4.  Decompress the `symetry.tar.gz` file and make sure to put its content into `/opt/symetry`. Your `/opt/symetry` folder content should be like the following:
+The recommended way to run SymetryML is with Docker Compose. Create a `docker-compose.yml` file:
 
-    ```
-    ├── lib
-    │   └── sym-spark-assembly.jar
-    ├── libExt
-    │   ├── (...) MANY ..jars file needed by SymetryML Rest, please do not modify
-    ├── nativelib
-    │   ├── libblas.so -> libmkl_rt.so
-    │   ├── libblas.so.3 -> libmkl_rt.so
-    │   ├── libiomp5.so
-    │   ├── liblapack.so -> libmkl_rt.so
-    │   ├── liblapack.so.3 -> libmkl_rt.so
-    │   ├── libmkl_avx.so
-    │   ├── libmkl_core.so
-    │   ├── libmkl_def.so
-    │   ├── libmkl_gnu_thread.so
-    │   ├── libmkl_intel_lp64.so
-    │   ├── libmkl_intel_thread.so
-    │   ├── libmkl_rt.so
-    │   └── libsym-gpu.so
-    ├── plugins
-    │   ├── activation-1.1.1.jar
-    │   ├── csv2.dsplugin
-    │   └── ds-plugin-csv2.jar
-    ├── python
-    │   ├── SMLDataFrameUtil.py
-    │   └── SMLProjectUtil.py
-    ├── spark-support
-    │   ├── spark2.4.5
-    │   │   └── lib -> /opt/spark-2.4.5-bin-hadoop2.7/jars
-    │   ├── spark2.4.6
-    │   │   └── lib -> /opt/spark-2.4.6-bin-hadoop2.7/jars
-    │   └── spark3.0.1
-    │       └── lib -> /opt/spark-3.0.1-bin-hadoop2.7/jars
-    │   └── spark3.0.2
-    │       └── lib -> /opt/spark-3.0.2-bin-hadoop2.7/jars
-    ├── sym-kafkastream-app
-    │   ├── etc
-    │   │   ├── log4j-f.properties
-    │   │   └── simple.props
-    │   ├── lib
-    │   │   ├── MANY ..jars file needed kafka stream application, please do not modify
-    │   └── run-ks-app-linux.sh
-    ├── symetry-admin-cli.jar
-    ├── symetry-rest.txt
-    ├── symetry-web.txt
-    └── symetry.sh
-    ```
-5.  Restart Jetty:
+```yaml
+services:
+  sml-server:
+    image: 428117700962.dkr.ecr.us-east-1.amazonaws.com/sml-server:6.3.0
+    container_name: sml-server
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    volumes:
+      - ./sym.lic:/opt/symetry/sym.lic:ro
+    environment:
+      - JAVA_OPTS=-server -Xms4096m -Xmx8192m -Dfile.encoding=UTF-8
+      - SML_RTLM_DB_REDIS_HOST=localhost
+      - SML_RTLM_DB_REDIS_PORT=6379
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+```
 
-    ```
-    sudo service jetty restart
-    ```
+Start SymetryML:
 
-## About the Jetty Configuration
+```bash
+docker compose up -d
+```
 
-| File                   | Description                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/etc/init.d/jetty`    | Controls the Java context used to launch the Jetty application server. For instance, to modify the minimum and maximum memory used by the Java virtual machine (JVM) and change the garbage collector behavior, modify `JAVA_OPTIONS` with the following configuration: `JAVA_OPTIONS="-server -Xms4096m -Xmx8192m -Dfile.encoding=UTF-8"` Notes: Modify the `-Xms4096m` `-Xmx8192m` according to your project size. |
-| `/opt/jetty/start.ini` | This is the file where you need to specify where your SymetryML license is located. You need to specify it using a java property like the following: `-Dsym.lic.loc=/opt/symetry/sym.lic` If this is not specified SymetryML will assume a default location of `/opt/symetry/sym.lic`.                                                                                                                               |
+### Ports
 
-## SymetryML Memory Requirements
+| Port | Protocol | Description         |
+| ---- | -------- | ------------------- |
+| 8080 | HTTP     | Web UI and REST API |
+| 8443 | HTTPS    | Secure access       |
 
-Please consults the [SymetryML Technical Requirements](../technical-requirements.md) for more information on memory requirements for various project sizes. Note that with SymetryML, project sizes are limited by the number of attributes, not the number of rows.
+### GPU Support
 
-## SymetryML REST Configuration
+To enable GPU acceleration, add the NVIDIA runtime and GPU environment variables:
 
-SymetryML has a configuration file in `/opt/symetry/symetry-rest.txt`. The following table provides information about available parameters.
+```yaml
+services:
+  sml-server:
+    image: 428117700962.dkr.ecr.us-east-1.amazonaws.com/sml-server:6.3.0
+    container_name: sml-server
+    runtime: nvidia
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    volumes:
+      - ./sym.lic:/opt/symetry/sym.lic:ro
+    environment:
+      - JAVA_OPTS=-server -Xms4096m -Xmx8192m -Dfile.encoding=UTF-8
+      - NVIDIA_VISIBLE_DEVICES=all
+      - LD_LIBRARY_PATH=/usr/local/cuda/lib64:/opt/symetry/nativelib
+      - SML_RTLM_DB_REDIS_HOST=localhost
+      - SML_RTLM_DB_REDIS_PORT=6379
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+```
+
+See the [GPU Installation Guide](gpu-installation-guide.md) for additional details.
+
+### Redis
+
+Redis is bundled inside the Docker image and starts automatically. To use an external Redis instance instead, update the `SML_RTLM_DB_REDIS_HOST` and `SML_RTLM_DB_REDIS_PORT` environment variables to point to your external Redis server.
+
+## Configuration
+
+### Customizing Configuration Files
+
+SymetryML uses two configuration files that control REST API and Web UI behavior:
+
+* `symetry-rest.txt` — REST API configuration (see [SymetryML REST Configuration](#symetryml-rest-configuration))
+* `symetry-web.txt` — Web UI configuration (see [SymetryML Web Configurations](#symetryml-web-configurations))
+
+To override the default configuration, mount custom files into the container:
+
+```yaml
+volumes:
+  - ./sym.lic:/opt/symetry/sym.lic:ro
+  - ./symetry-rest.txt:/opt/symetry/symetry-rest.txt:ro
+  - ./symetry-web.txt:/opt/symetry/symetry-web.txt:ro
+```
+
+### SymetryML Memory Requirements
+
+Please consult the [SymetryML Technical Requirements](../technical-requirements.md) for more information on memory requirements for various project sizes. Note that with SymetryML, project sizes are limited by the number of attributes, not the number of rows.
+
+Memory is configured via the `JAVA_OPTS` environment variable. Adjust `-Xms` (minimum heap) and `-Xmx` (maximum heap) according to your project size:
+
+```yaml
+environment:
+  - JAVA_OPTS=-server -Xms4096m -Xmx8192m -Dfile.encoding=UTF-8
+```
+
+### SymetryML REST Configuration
+
+SymetryML REST behavior is controlled by the `symetry-rest.txt` configuration file. The following table provides information about available parameters.
 
 | Parameter                                                     | Description                                                                                                                                                                                                                                                                                                                                                                                   |
 | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `jobreaper.run.period`                                        | Controls how often the ‘thread reaper’ runs. The thread reaper removes finished jobs from the job queue. Normally, a job is removed after a REST call is made to inquire about a job’s status. If this call never comes, the job reaper ensures that the queue does not grow too large.                                                                                                       |
+| `jobreaper.run.period`                                        | Controls how often the 'thread reaper' runs. The thread reaper removes finished jobs from the job queue. Normally, a job is removed after a REST call is made to inquire about a job's status. If this call never comes, the job reaper ensures that the queue does not grow too large.                                                                                                       |
 | `jobreaper.job.expiration`                                    | Expiration time for a job to be removed from the list of jobs after it is finished. That is removed by the JobReaper mentioned above.                                                                                                                                                                                                                                                         |
 | `request.signature.timeout`                                   | Reserved for internal use.                                                                                                                                                                                                                                                                                                                                                                    |
 | `rtlm.option.assessment.limit.size`                           | The maximum number of lines to read from a datasource during a model assessment. Default: 1000000                                                                                                                                                                                                                                                                                             |
@@ -254,7 +207,7 @@ SymetryML has a configuration file in `/opt/symetry/symetry-rest.txt`. The follo
 
 #### SymetryML Web Configurations
 
-Certain Symetry Web parameters can be configured by editing the `/opt/symetry/symetry-web.txt` configuration file. Ensure that `-Drtlm.web.db=/opt/symetry/symetry-web.txt` is set in `/opt/jetty/start.ini`.
+Certain SymetryML Web parameters can be configured by editing the `symetry-web.txt` configuration file.
 
 | Parameter                    | Description                                          |
 | ---------------------------- | ---------------------------------------------------- |
@@ -262,8 +215,23 @@ Certain Symetry Web parameters can be configured by editing the `/opt/symetry/sy
 | `sym.web.auto.logoff.enable` | Set to `false` disable auto logoff                   |
 | `sym.web.auto.logoff.time`   | Auto logoff time in minutes                          |
 
+## Updating SymetryML
+
+To update SymetryML, pull the new image version and recreate the container:
+
+```bash
+docker pull 428117700962.dkr.ecr.us-east-1.amazonaws.com/sml-server:<NEW_VERSION>
+```
+
+Update the image tag in your `docker-compose.yml`, then restart:
+
+```bash
+docker compose down
+docker compose up -d
+```
+
 ## Troubleshooting
 
 **Question:** I am getting the following error: `java.util.concurrent.ExecutionException: javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
 
-**Answer:** The host where your jetty is does not have a valid certificate. If you know you can trust this server you can bypass this by setting `sml.fed.admin.trust_all_certs=1` as documented in the [About the SymetryML Configuration](./#about-the-symetryml-configuration) section.
+**Answer:** The host does not have a valid SSL certificate. If you know you can trust this server you can bypass this by setting `sml.fed.admin.trust_all_certs=1` in the `symetry-rest.txt` configuration file. See the [SymetryML REST Configuration](#symetryml-rest-configuration) section for details.

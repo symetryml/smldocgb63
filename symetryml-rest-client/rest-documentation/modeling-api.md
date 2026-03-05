@@ -196,7 +196,7 @@ BODY:
 | **sml\_project\_power\_max**    | Float   | maximum power to use                    |
 | **sml\_project\_power\_steps**  | Integer | steps between minimum and maximum power |
 
-Power transformation prefix and suffix can be configured in the `/opt/symetry/symetry-rest.txt` configuration file. Please consult the [Installation Guide Symetry Control Configuration](../../guides/installation-guide/#about-the-symetryml-configuration) for details on configuring that file.
+Power transformation prefix and suffix can be configured in the `symetry-rest.txt` configuration file. Please consult the [Installation Guide - SymetryML REST Configuration](../../guides/installation-guide/#symetryml-rest-configuration) for details on configuring that file.
 
 | Parameter                           | Description      |
 | ----------------------------------- | ---------------- |
@@ -856,3 +856,181 @@ DELETE /symetry/rest/{cid}/projects/{pid}/models/{modelid}
 | HTTP Status Code | HTTP Status Message | Description |
 | ---------------- | ------------------- | ----------- |
 | **200**          | OK                  | Success     |
+
+## Cumulative Incidence Function (CIF)
+
+The cumulative incidence function (CIF) estimates the probability of a specific event occurring by a given time in the presence of competing risks. Unlike standard survival methods, which can overestimate event probabilities by treating competing events as censored, CIF properly accounts for the fact that experiencing one event precludes another. Use the following endpoints to retrieve cause-specific incidence estimates.
+
+### Get Total Events
+
+Retrieves the total number of events for specified groups in a CIF model.
+
+#### URL
+
+```
+POST /symetry/rest/{cid}/projects/{pid}/cif/NtotEvents [body=StringList]
+```
+
+#### Request Body
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| **strings** | Array[String] | List of group names |
+
+#### Sample Request/Response
+
+```
+Request:
+POST url="http://charm:8080/symetry/rest/c1/projects/survivalProject/cif/NtotEvents"
+
+Body:
+{
+    "strings": ["group1", "group2"]
+}
+
+Response:
+{"statusCode":"OK","statusString":"OK","values":{...}}
+```
+
+### Predict At Risk
+
+Predicts the number of subjects at risk at specified time points.
+
+#### URL
+
+```
+POST /symetry/rest/{cid}/projects/{pid}/cif/predictAtRiskCIF [body=CIFPredictionRequestList]
+```
+
+#### Request Body
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| **times** | Array[Number] | Time points for prediction |
+| **k** | Integer | Event type index |
+| **group** | String | Group name (optional) |
+
+#### Sample Request/Response
+
+```
+Request:
+POST url="http://charm:8080/symetry/rest/c1/projects/survivalProject/cif/predictAtRiskCIF"
+
+Body:
+{
+    "requests": [
+        {
+            "times": [0.5, 1.0, 2.0, 5.0],
+            "k": 1,
+            "group": "groupName"
+        }
+    ]
+}
+
+Response:
+{"statusCode":"OK","statusString":"OK","values":{...}}
+```
+
+### Predict Event
+
+Predicts number of events at specified time points.
+
+#### URL
+
+```
+POST /symetry/rest/{cid}/projects/{pid}/cif/predictEvent [body=CIFPredictionRequestList]
+```
+
+#### Request Body
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| **times** | Array[Number] | Time points for prediction |
+| **k** | Integer | Event type index |
+| **group** | String | Group name (optional) |
+
+#### Sample Request/Response
+
+```
+Request:
+POST url="http://charm:8080/symetry/rest/c1/projects/survivalProject/cif/predictEvent"
+
+Body:
+{
+    "requests": [
+        {
+            "times": [0.5, 1.0, 2.0, 5.0],
+            "k": 1,
+            "group": "groupName"
+        }
+    ]
+}
+
+Response:
+{"statusCode":"OK","statusString":"OK","values":{...}}
+```
+
+## Kaplan-Meier Survival Analysis
+
+The Kaplan-Meier estimator calculates the probability of surviving beyond a given time, accounting for censored observations. It is best suited for settings with a single event type, as it does not account for competing risks.
+
+### Get Survival DataFrames
+
+Retrieves survival data frames from a Kaplan-Meier model.
+
+#### URL
+
+```
+GET /symetry/rest/{cid}/projects/{pid}/km/getSurvivalFrame
+```
+
+#### Sample Request/Response
+
+```
+Request:
+GET url="http://charm:8080/symetry/rest/c1/projects/survivalProject/km/getSurvivalFrame"
+
+Response:
+{"statusCode":"OK","statusString":"OK","values":{...}}
+```
+
+### Kaplan-Meier Predict
+
+Performs survival predictions with confidence intervals.
+
+#### URL
+
+```
+POST /symetry/rest/{cid}/projects/{pid}/km/kaplanmeier [body=KMQueryList]
+```
+
+#### Request Body
+
+| Field | Type | Default | Description |
+| ----- | ---- | ------- | ----------- |
+| **type** | String | - | Query type (e.g., `"SURVIVAL"`) |
+| **group** | String | null | Group name for stratified analysis (optional) |
+| **alpha** | Number | 0.05 | Confidence level (0 < alpha < 1) |
+| **times** | Array[Number] | - | Time points for prediction |
+
+#### Sample Request/Response
+
+```
+Request:
+POST url="http://charm:8080/symetry/rest/c1/projects/survivalProject/km/kaplanmeier"
+
+Body:
+{
+    "queries": [
+        {
+            "type": "SURVIVAL",
+            "group": "groupName",
+            "alpha": 0.05,
+            "times": [0.5, 1.0, 2.0, 5.0, 10.0]
+        }
+    ]
+}
+
+Response:
+{"statusCode":"OK","statusString":"OK","values":{...}}
+```

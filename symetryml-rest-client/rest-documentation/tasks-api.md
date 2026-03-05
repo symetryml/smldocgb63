@@ -2,7 +2,7 @@
 
 The task suite of Rest API methods allows to create, start, stop and list SymetryML Kafka stream applications. These applications are meant to automatically perform prediction on a Kafka Topic and then save the prediction results in another Kafka topic.
 
-There is a maximum number of task that can be run at the same time. This number is controlled by the `sml.task.max` SymetryML control parameter. Please consult the [Installation Guide](../../guides/installation-guide/#about-the-symetryml-configuration) for more details on how to set this parameters. The default value for this `sml.task.max` parameter is 4. Please consult the [SML Kafka Stream Application Documentation](https://github.com/symetryml/smldocgb/blob/master/kafka-stream-app.md) for details.
+There is a maximum number of task that can be run at the same time. This number is controlled by the `sml.task.max` SymetryML control parameter. Please consult the [Installation Guide - SymetryML REST Configuration](../../guides/installation-guide/#symetryml-rest-configuration) for more details on how to set this parameters. The default value for this `sml.task.max` parameter is 4. Please consult the [SML Kafka Stream Application Documentation](https://github.com/symetryml/smldocgb/blob/master/kafka-stream-app.md) for details.
 
 Some additional parameters can be set inside the [TaskInfo](appendix-a-json-data-structure-schema.md#taskinfo-json) JSON data structure with the `params` map field:
 

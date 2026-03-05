@@ -17,7 +17,7 @@ The following table describes the difference between the available project types
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **cpu or dynamic**    | <p>- Project update (learn/forget) done on CPU.</p><p>- Project stored on CPU memory.</p><p>- Use this type of project if you have categorical attributes or fewer than 50-100 attributes.</p>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | **gpu**               | <p>- Project update (learn/forget) done on GPU.</p><p>- Project stored on GPU memory.</p><p>- Use this type of project if you have data with more than 100 - 200 attributes.</p>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| **multi gpu**         | <p>- Project update (learn/forget) done on multiple GPUs.</p><p>- Project stored on multiple GPUs memory.</p><p>- Use this type of project if you have dense data with more than 1000 attributes and you have multiple GPUs available. Please note that you cannot directly use category with a GPU project type. Such data needs to be one hot encoded before pushing it into a SymetryML GPU project.</p><p>- Multi GPU project are stored in the local file system. Where they are saved depends on the following SymetryML configuration parameters (Consult the<a href="../../guides/installation-guide/#about-the-symetryml-configuration"> Section on SymetryML configuration in the Installation Guide</a> for details)</p><ul><li><code>sml.mgpubet.persistence.dir</code></li><li><code>sml.mgpubet.persistence.suffix</code></li><li><code>sml.mgpubet.persistence.file-ext</code></li></ul> |
+| **multi gpu**         | <p>- Project update (learn/forget) done on multiple GPUs.</p><p>- Project stored on multiple GPUs memory.</p><p>- Use this type of project if you have dense data with more than 1000 attributes and you have multiple GPUs available. Please note that you cannot directly use category with a GPU project type. Such data needs to be one hot encoded before pushing it into a SymetryML GPU project.</p><p>- Multi GPU project are stored in the local file system. Where they are saved depends on the following SymetryML configuration parameters (Consult the<a href="../../guides/installation-guide/#symetryml-rest-configuration"> Section on SymetryML configuration in the Installation Guide</a> for details)</p><ul><li><code>sml.mgpubet.persistence.dir</code></li><li><code>sml.mgpubet.persistence.suffix</code></li><li><code>sml.mgpubet.persistence.file-ext</code></li></ul> |
 | **Sequence**          | SymetryML needs to perform some additional logic for these type of models to be built. Use the _sequence_ project type so that you can build such models on your data. See the section [About Sequence Projects](symetryml-projects-rest-api.md#about-sequence-projects) for more details.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | **Partitioned**       | Use this type of project if you need to use LDA model with multi-class classifier or if you need to build a QDA model. When creating such projects one needs to specify the attribute that will be used to partition the project. This attribute needs to be of type `String` and usually should be the target for building your LDA or QDA models.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | **Federated Project** | Federated Project allows multiple SymetryML projects to form a _federation_ that leverage each individual project so that they all work together as if they were one single project. That is from the perspective of each individual project they can all build the same models or compute the same exploration metrics and all of this is accomplished without sharing any data. For more information please consult the [Federated Project Section](symetryml-projects-rest-api.md#about-federated-projects).                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -741,4 +741,72 @@ POST url="http://charm:8080/symetry/rest/c1/projects/dataDrift"
 
 Body:
 {"inputAttributeNames":[],"extraParameters":{"driftPreferenceProjectName":"irisProject","driftAnalysisProjectName":"rolling_window_embedded_project","driftMetric":"marginal_stat"}}
+```
+
+## Performance Estimation
+
+Performance Estimation estimates supervised model performance on production data when ground truth labels are not yet available. This enables real-time monitoring of model degradation due to covariate shift—distribution changes between training and production environments.
+
+**Key Features:**
+
+* **Model-agnostic:** Works with any binary classification model. Simply provide prediction scores from your model to obtain performance estimates, regardless of whether it's a SymetryML model or an external model.
+* **Label-free monitoring:** Estimates any confusion matrix-based performance metric (ROC curve, precision-recall curve, precision, recall, accuracy, F1 score, specificity) without requiring production labels.
+* **Adaptive:** Automatically learns and adapts to distribution shifts without requiring user specification of the shift characteristics.
+
+**Technical Approach:** The implementation is based on the Probabilistic Adaptive Performance Estimation (PAPE) framework from Białek et al., 2024. SymetryML provides an optimized implementation featuring single-pass, moments-based computation for efficient streaming estimation in production environments.
+
+### URL
+
+```
+POST /symetry/rest/{cid}/projects/performanceEstimator
+```
+
+### Query Parameters
+
+| Parameter | Required / Optional | Description |
+| ----- | ----- | ----- |
+| **targetName** | Required | Name of the target attribute |
+| **validationProject** | Required | Name of the validation project |
+| **productionProject** | Required | Name of the production project |
+| **metric** | Required | Performance metric to compute. Valid values: `roc_curve`, `precrec_curve`, `precision`, `recall`, `accuracy`, `f1`, `specificity` |
+| **threshold** | Required | Threshold value for classification. Not used when metric is `roc_curve` or `precrec_curve` |
+
+### Request Body
+
+JSON with `prodDf` and `valDf` DataFrames:
+
+* `valDf` - A [DataFrame](appendix-a-json-data-structure-schema.md#dataframe-json) containing the validation data including target values as well as an extra column named `score_validation` containing the prediction scores of the model on the validation data.
+* `prodDf` - A [DataFrame](appendix-a-json-data-structure-schema.md#dataframe-json) containing only one column named `score_production` containing the prediction scores of the model on the production data.
+
+```json
+{
+  "valDf": { ... },
+  "prodDf": { ... }
+}
+```
+
+### HTTP Responses
+
+| HTTP Status Code | HTTP Status Message | Description |
+| ---------------- | ------------------- | ----------- |
+| **200**          | OK                  | Success.    |
+| **400**          | BAD REQUEST         | Unknown project or invalid parameters. |
+
+### HTTP Response Entity
+
+| HTTP Response Entity                                            | Description                                              |
+| --------------------------------------------------------------- | -------------------------------------------------------- |
+| [**KSVDMap**](appendix-a-json-data-structure-schema.md#ksvdmap) | Contains the estimated performance metric values.        |
+
+### Sample Request/Response
+
+```
+Request:
+POST url="http://charm:8080/symetry/rest/c1/projects/performanceEstimator?targetName=label&validationProject=valProject&productionProject=prodProject&metric=accuracy&threshold=0.5"
+
+Body:
+{"valDf":{"attributeNames":["feature1","feature2","label","score_validation"],"data":[["1.0","2.0","1","0.85"],["3.0","4.0","0","0.23"]],"attributeTypes":["C","C","B","C"]},"prodDf":{"attributeNames":["score_production"],"data":[["0.78"],["0.12"]],"attributeTypes":["C"]}}
+
+Response:
+{"statusCode":"OK","statusString":"OK","values":{...}}
 ```

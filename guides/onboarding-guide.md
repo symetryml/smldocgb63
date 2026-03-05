@@ -89,10 +89,8 @@ The [SymetryML Installation Guide](installation-guide/) will guide you through t
 
 #### _SymetryML Examples_
 
-The following URL contains links to sample code: [_SymetryML Examples_](https://github.com/symetryml/symetryMLv5.4).
+The following URL contains links to sample code: [_SymetryML Examples_](https://github.com/symetryml/SymetryML-Examples).
 
 #### _SymetryML Admin Users Guide._
 
 The [SymetryML Admin CLI](admin-user-guide.md) is a command-line application that allows administrators to manage service updates and user credentials. This user guide describes the common usage patterns for the SymetryML Admin CLI.
-
-###

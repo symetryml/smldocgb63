@@ -191,7 +191,7 @@ You can specify additional parameters that describe the ‘type of csv files’.
 
 SymetryML can leverage a spark cluster to speed up processing of large amounts of data significantly. Currently, your data must reside on Amazon S3. Depending on the size of your data, it may take more or less time for the job to start, as the Spark Cluster must compute the partitions of your data before starting the job. Consequently, if your data is very large, this may take a few minutes.
 
-Please be sure to consult the [Spark Installation Guide](../../guides/installation-guide/spark-installation-guide.md) for additional Spark information - and more particularly the [Additional SymetryML Configuration for Spark Support](../../guides/installation-guide/spark-installation-guide.md#additional-symetryml-configuration-for-spark-support) section.
+Please be sure to consult the [Spark Installation Guide](../../guides/installation-guide/spark-installation-guide.md) for additional Spark information.
 
 **Best practices for Spark S3 Data Source:**
 

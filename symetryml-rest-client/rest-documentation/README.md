@@ -14,7 +14,7 @@ Users of the SymetryML REST service must be authorized by SymetryML Inc.
 
 ## Reference Implementation
 
-A reference implementation of the rest client for python (pymetry) is available [here](https://sml-pymetry-soft.s3.amazonaws.com/pymetry-5.6.1515a0.tar.gz).
+A reference implementation of the rest client for python (pymetry) is available [here](https://sml-pymetry-soft.s3.us-east-1.amazonaws.com/pymetry-6.3.0.2013.tar.gz).
 
 Installation of the python script can be performed by download the latest version of pymetry rest client and running the following command:
 
