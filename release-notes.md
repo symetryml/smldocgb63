@@ -2,27 +2,6 @@
 
 ---
 
-## Version 6.2
-
-### New Features
-
-#### SSO Authentication Support
-SymetryML now supports Single Sign-On (SSO) authentication via OIDC (OpenID Connect) and LDAP. After SSO authentication, SymetryML credentials (username and secret key) are returned for API access. SSO can also auto-create SymetryML user accounts based on the SSO profile.
-
-#### Server Logs API
-A new REST endpoint allows retrieval of the last N lines from the server log file. The number of lines returned is controlled by the `SML_LOG_TAIL_SIZE` configuration parameter.
-
-```
-GET /symetry/rest/{cid}/logs
-```
-
-### Infrastructure Changes
-
-- **Jakarta EE Migration:** Migrated from `javax.ws.rs` to `jakarta.ws.rs` (JDK 11 support)
-- All existing REST endpoints maintain full backward compatibility
-
----
-
 ## Version 6.3
 
 ### New REST API Endpoints
@@ -150,3 +129,24 @@ New project configuration for retaining statistics from only the most recent N r
 - **Jetty Upgrade:** Updated to Jetty 12.x (Jakarta EE)
 - **Explore Endpoint:** Updated with `returnProjectInfo` parameter
 - **Density Estimates:** Updated with federation support and improved threading
+
+---
+
+## Version 6.2
+
+### New Features
+
+#### SSO Authentication Support
+SymetryML now supports Single Sign-On (SSO) authentication via OIDC (OpenID Connect) and LDAP. After SSO authentication, SymetryML credentials (username and secret key) are returned for API access. SSO can also auto-create SymetryML user accounts based on the SSO profile.
+
+#### Server Logs API
+A new REST endpoint allows retrieval of the last N lines from the server log file. The number of lines returned is controlled by the `SML_LOG_TAIL_SIZE` configuration parameter.
+
+```
+GET /symetry/rest/{cid}/logs
+```
+
+### Infrastructure Changes
+
+- **Jakarta EE Migration:** Migrated from `javax.ws.rs` to `jakarta.ws.rs` (JDK 11 support)
+- All existing REST endpoints maintain full backward compatibility
