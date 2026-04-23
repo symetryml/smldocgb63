@@ -449,6 +449,7 @@ The anomaly models available in SymetryML are:
 * Histogram Based Anomaly - HBA (requires a histogram enabled project)
 * ECOD - Empirical Cumulative Distribution Functions for outlier detection (requires a histogram enabled project)
 * EVT - Extreme value theorem
+* Reconstruction Error PCA - REPCA
 
 #### ECOD Model Parameters
 
@@ -466,6 +467,23 @@ The threshold for ECOD model can be specified in the following way:
 | **Anomaly Threshold**   | Double | Absolute score threshold for marking an outlier |
 
 ![ECOD Anomaly Model - Desired Probability](../../.gitbook/assets/ecod\_prob.png) ![ECOD Anomaly Model - Anomaly Threshold](../../.gitbook/assets/ecod\_threshold.png)
+
+#### REPCA Model Parameters
+
+REPCA (Reconstruction Error PCA) fits a PCA on the standardized covariance of the input features and flags a new record by combining two statistics computed from its reconstruction:
+
+* **Q-statistic (Squared Prediction Error)** — squared Euclidean distance between the standardized record and its reconstruction after projecting into the retained PCA subspace and back. Catches records that violate the learned correlation structure or express novel patterns. Its threshold comes from the Chi-Squared distribution.
+* **Hotelling's T²** — a Mahalanobis-like distance *inside* the retained PCA subspace. Catches records that follow the data pattern but sit far from the center along the principal directions. Its threshold comes from the F-distribution.
+
+The number of retained components is chosen automatically to reach a target explained-variance ratio, and is capped by the feature count and by the number of training samples to keep the model numerically stable.
+
+REPCA has the following optional parameters:
+
+| Parameter                     | Default  | Description                                                                                                                                                                                                           |
+| ----------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **repca\_pca\_explained\_var** | auto     | Target cumulative explained-variance ratio in (0, 1) used to pick the number of retained components. If omitted, a value is chosen from the samples-to-features ratio: 0.80 (< 10), 0.90 (< 50), 0.95 (< 200), 0.98 otherwise. |
+| **repca\_confidence**          | 0.95     | Confidence level used to compute the Q and T² thresholds. Must be in (0, 1).                                                                                                                                          |
+| **repca\_score\_type**         | hybrid   | Which score to return: `hybrid` (returns `max(Q / Q_threshold, T² / T²_threshold)`, anomaly when > 1), `q` (raw Q-statistic), or `t2` (raw Hotelling's T²).                                                         |
 
 #### Anomaly Plot
 
