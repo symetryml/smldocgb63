@@ -6,13 +6,14 @@ This API function allows for the building of a model by specifying the attribute
 
 ### Real-Time Anomaly Models
 
-SymetryML support 5 anomaly detection algorithms:
+SymetryML support 6 anomaly detection algorithms:
 
 * **MFAnomaly**: an anomaly model based on a mixture of isolation forest and SymetryML online random forest algorithm.
-* **OSSPCAModel**: Online implementation of Out of sample PCA.
+* **OOSPCAModel**: Online implementation of Out of sample PCA.
 * **HBAModel**: Online model based on histograms of the input features.
 * **ECODModel**: Empirical Cumulative Distribution Outlier detection
 * **EVTModel**: Extreme value Theory based
+* **REPCAModel**: PCA Reconstruction-Error based. Flags points that violate the learned PCA structure (Q-statistic) and/or sit far from the center along retained principal directions (Hotelling's T²).
 
 These algorithms work in real-time on streaming data and are a type of of unsupervised learning algorithm in the sense that one does not need to provide _positive_ examples of anomalies to the different algorithms. The 3 models use intrinsic values of the inputs features to compute an anomaly scores. To create such models just use the appropriate id - from [Model Algorithm ID](modeling-api.md#model-algorithm-id) - when creating them using [Build Model](modeling-api.md#build-model-rest-api) rest API.
 
@@ -76,6 +77,7 @@ The following models are supported. For power regression model to be available a
 | **rf\_anomaly**    | Anomaly / outlier model based on Online Random forest and isolation forest                                                                                                                                                                   |
 | **oospca**         | Online Anomaly / outlier model based on _out of sample PCA_.                                                                                                                                                                                 |
 | **hba**            | Online Anomaly / outlier model based on histograms of the input features.                                                                                                                                                                    |
+| **repca**          | Anomaly / outlier model based on _PCA reconstruction error_ (Q-statistic) and _Hotelling's T²_.                                                                                                                                              |
 
 ### About Random Forest
 
@@ -296,6 +298,23 @@ If the distribution of your input data does not change, the threshold method mig
 | **evt\_two\_sides**       | Optional            | If false, only values above `evt_quantile` will be treated as exceedances. Otherwise, uppwer exceedances (above `evt_quantile`) and lower exceedances (`1 - evt_quantile`) will be tracked seperately. |
 | **evt\_seed**             | Optional            | Seed for initial distribution.                                                                                                                                                                         |
 | **evt\_max\_exceedances** | Optional            | The maximum number of values used to fit the Pareto Distribution.                                                                                                                                      |
+
+### REPCA Model MLContext Build Parameters
+
+REPCA stands for _Reconstruction-Error PCA_. The model fits PCA on the standardized covariance of the input features, retains the top _q_ components needed to reach a target explained-variance ratio, and then flags new points using two complementary statistics:
+
+* **Q-statistic (Squared Prediction Error)**: squared Euclidean distance between a standardized point and its reconstruction after projecting into the _q_-dimensional PCA subspace and back. Detects points that violate the learned correlation structure or express novel patterns. Its threshold is derived from the Chi-Squared distribution with _D - q_ degrees of freedom.
+* **Hotelling's T²**: Mahalanobis-like distance _inside_ the retained PCA subspace (sum of squared projected scores weighted by the inverse eigenvalues). Detects points that follow the data pattern but are extreme along the principal directions. Its threshold is derived from the F-distribution, which is more accurate than the Chi-Squared approximation for small training samples.
+
+The **hybrid** score normalizes each statistic by its threshold and returns the max — a point is flagged if either statistic exceeds its own threshold.
+
+The number of retained components _q_ is chosen to reach `repca_pca_explained_var` but is capped by _D - 1_ (dimensions) and _N / 10_ (samples) to keep the model numerically stable.
+
+| Parameter                     | Required / Optional | Description                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ----------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **repca\_pca\_explained\_var** | Optional            | Target cumulative explained-variance ratio used to choose the number of retained principal components _q_. Must be in (0, 1). If not provided, a value is selected automatically from the _N/D_ ratio: `0.80` when _N/D_ < 10, `0.90` when < 50, `0.95` when < 200, `0.98` otherwise.                                                                                                                           |
+| **repca\_confidence**          | Optional            | Confidence level used when computing the Q-statistic (Chi-Squared) and T² (F-distribution) thresholds. Must be in (0, 1). **Default is 0.95.**                                                                                                                                                                                                                                                                   |
+| **repca\_score\_type**         | Optional            | Which score to return from `predict`. One of `hybrid`, `q`, `t2`. **Default is `hybrid`.** With `hybrid`, the returned score is `max(q/q_threshold, t2/t2_threshold)` and a value > 1 flags an anomaly. With `q` or `t2`, the raw statistic is returned and is flagged when above its corresponding threshold.                                                                                                  |
 
 ### Principal Component Regression Model MLContext Build Parameters
 
@@ -583,6 +602,7 @@ The following table enumerates the additional specific keys/value pairs that are
 | **Bayes**                                       |                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | **ECOD**                                        | See [model extra ECOD](modeling-api.md#model-extra-ecod)                                                                                                                                                                                                                                                                                                                                                                    |
 | **EVTModel**                                    |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| **REPCA**                                       | See [model extra REPCA](modeling-api.md#model-extra-repca)                                                                                                                                                                                                                                                                                                                                                                  |
 | **Kmeans**                                      | See [model extra Kmeans](modeling-api.md#model-extra-kmeans)                                                                                                                                                                                                                                                                                                                                                                |
 | **Markov Chains**                               | <p>Transition Matrix formatted as follows:<br>{tm1$STATE:$:to$STATE – where STATE corresponds for Markov process state.</p>                                                                                                                                                                                                                                                                                                 |
 | **Hidden Markov Model**                         | <p>Transition Matrix formatted as follows:<br>{HIDDEN_tm1$STATE:$:HIDDEN_tm0$STATE – where HIDDEN/STATE corresponds for Markov process state group and state respectively.<br>Emission Matrix formatted as follows<br>[HIDDEN_t0$STATE:$:OBSERVED$STATE – where HIDDEN/STATE corresponds for Markov process state-group and state respectively, while OBSERVED/STATE corresponds to the observed state-group and state.</p> |
@@ -664,6 +684,14 @@ The following table enumerates the additional specific keys/value pairs that are
 | **ecod\_anomaly\_threshold** | Value of the threshold                  |
 | **skewness**                 | Values of the skewness for each feature |
 | **mean**                     | Values of the mean for each feature     |
+
+#### Model Extra REPCA
+
+| Key                             | Description                                                                                           |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **size**                        | Number of features used in the model                                                                  |
+| **repca\_features**             | Names of the features used in the model                                                               |
+| **repca\_anomaly\_threshold**   | The two thresholds computed at build time, `[Q_threshold, T2_threshold]` (Chi-Squared and F-dist).    |
 
 #### Model Extra Principal Component Regression
 
