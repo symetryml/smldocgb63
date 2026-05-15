@@ -42,6 +42,75 @@ We will use the activity dataset, which contains a labeled sequence of human act
 
 ![Sequence Data - Activity](../.gitbook/assets/seq\_data\_activity.png)
 
+### Data Shapes for MC vs HMM
+
+The two model types require different data layouts.
+
+#### Markov Chain — Horizontal or Vertical
+
+MC data can be provided in either of two equivalent formats; both produce identical models.
+
+**Horizontal** — one row, one column per token. All attributes use type **String**.
+
+| a0     | a1     | a2    | a3      | ... |
+|--------|--------|-------|---------|-----|
+| sunny  | cloudy | rainy | sunny   | ... |
+
+**Vertical** — one column, one row per token. The single attribute uses type **String**.
+
+| a0     |
+|--------|
+| sunny  |
+| cloudy |
+| rainy  |
+| sunny  |
+| ...    |
+
+> When the CSV file has no header, SymetryML auto-generates column names (`a0`, `a1`, `a2`, ...). Use those same names in any REST learn or predict body.
+
+#### Hidden Markov Model — Vertical only
+
+HMM data must be provided in **vertical** format: one row per timestep, with a separate column for the hidden state and the observed state.
+
+| Activity  | Place     |
+|-----------|-----------|
+| sleeping  | bedroom   |
+| sleeping  | bedroom   |
+| walking   | hallway   |
+| cooking   | kitchen   |
+| ...       | ...       |
+
+* The **hidden state** column (e.g. `Activity`) must use type **Categorical**.
+* The **observed state** column (e.g. `Place`) uses type **Categorical** for discrete observations or **Continuous** for numeric sensor readings.
+
+When predicting with an HMM, supply only the observed column — one row per timestep. The model returns the inferred hidden state for each row.
+
+### Laplace Smoothing for Unseen Observations
+
+By default, both MC and HMM assign **zero probability** to any state or observation not seen during training. This causes problems at predict time if the input contains a value the model has never encountered — the transition or emission probability will be zero, which can collapse the entire prediction.
+
+Laplace (add-k) smoothing fixes this by adding a small pseudocount to every transition or emission so that unseen combinations receive a small non-zero probability instead of zero.
+
+**Parameter**: `laplace_factor` (integer, default `0` — disabled)
+
+Pass it in `extraParameters` at **build** time:
+
+```json
+"extraParameters": { "laplace_factor": "1" }
+```
+
+**For MC** — smooths the transition matrix. The probability of moving from state `s` to state `t` becomes:
+
+```
+P(t | s) = (count(s → t) + k) / (count(s) + N × k)
+```
+
+where `N` is the number of distinct states and `k` is the Laplace factor. A value of `1` is the classic Laplace estimate; higher values apply stronger smoothing.
+
+**For HMM** — smooths both the transition matrix (A) and the emission matrix (B). An observation at predict time that was never seen during training receives a small non-zero emission probability under every hidden state, preventing the forward algorithm from assigning zero probability to the entire sequence.
+
+> **CategoricalHMM** uses a separate float parameter `chmm_smoothing` (e.g. `"chmm_smoothing": "1e-3"`) rather than `laplace_factor`. This is applied to the B matrix during EM training rather than at predict time.
+
 ### Markov Chain
 
 To work with MC models:

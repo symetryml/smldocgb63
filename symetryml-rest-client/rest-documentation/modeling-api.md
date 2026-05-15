@@ -473,9 +473,139 @@ Job Response:
 
 ## Building Sequence Models
 
-Markov Chain Models and Hidden Markov Models are built differently. First, the project must be marked as a “sequence” project. After some data is learned, you can build Markov Chains, Hidden Markov Models, or both. These types of models have input attributes only; they do not have a target.
+Markov Chain (MC) and Hidden Markov Model (HMM) models are built against a project of type **sequence** (`sml_project_order=1`). After data is learned into the project, one or both model types can be built. The build endpoint is the same as for other model types; the `algo` query parameter selects the model type.
 
-For Markov Chains, you input attributes to specify the sequence attributes to use. For Hidden Markov Model, you also specify the hidden state that must be categorical. The Observed state can be continuous or categorical. If it is a continuous attribute, normal distribution will be assumed, mean and standard deviation of the data is used.
+### URL
+
+```
+POST /symetry/rest/{cid}/projects/{pid}/build?algo={mc|hmm}&modelid={modelid} [body=MLContext]
+```
+
+### Data Shapes
+
+MC and HMM require different data layouts when learning the project.
+
+**Markov Chain — Horizontal or Vertical**
+
+Both formats produce identical models. All attributes use type **String** (`”S”`).
+
+* **Horizontal**: one row, one column per token (e.g. 40 columns `a0`…`a39` for a 40-token sequence).
+* **Vertical**: one column, one row per token (e.g. column `a0` with 40 rows).
+
+When the CSV file has no header, SymetryML auto-generates column names (`a0`, `a1`, …). Use those same generated names in the learn and build body.
+
+After learning, the server expands each unique value into a `tm1$VALUE` attribute (current state) and a `t0$VALUE` attribute (next state).
+
+**Hidden Markov Model — Vertical only**
+
+HMM data must be vertical: one row per timestep, with one column for the hidden state and one column for the observed state.
+
+* The **hidden state** column must use type **Categorical** (`”T”`).
+* The **observed state** column uses type **Categorical** (`”T”`) for discrete observations, or **Continuous** (`”C”`) for numeric values. If continuous, the model assumes a Gaussian distribution and estimates mean and standard deviation per hidden state.
+
+### MLContext Build Parameters — Markov Chain
+
+| Parameter | Required / Optional | Type | Description |
+|---|---|---|---|
+| **inputAttributes** | Required | String index | Numeric string index of any `tm1$*` attribute (e.g. `”0”` for `tm1$sunny`). Column names are not accepted. |
+| **targets** | Required | String index | Numeric string index of any `t0$*` attribute (e.g. `”1”` for `t0$sunny`). Column names are not accepted. |
+| **laplace_factor** | Optional | Integer | Laplace smoothing factor (default `0` — disabled). See [Laplace Smoothing](#laplace-smoothing-for-unseen-observations) below. |
+
+### MLContext Build Parameters — Hidden Markov Model
+
+| Parameter | Required / Optional | Type | Description |
+|---|---|---|---|
+| **inputAttributes** | Required | String | Column name of the **hidden state** attribute (must be categorical). Example: `["Activity"]`. |
+| **targets** | Required | String | Column name of the **observed state** attribute (categorical or continuous). Example: `["Place"]` or `["logret"]`. |
+| **laplace_factor** | Optional | Integer | Laplace smoothing factor (default `0` — disabled). See [Laplace Smoothing](#laplace-smoothing-for-unseen-observations) below. |
+
+### HTTP Responses
+
+| HTTP Status Code | HTTP Status Message | Description |
+|---|---|---|
+| **202** | ACCEPTED | Job accepted. Response includes a `Location` header with the job URL. |
+| **400** | BAD REQUEST | Unknown project or invalid parameters. |
+
+### Laplace Smoothing for Unseen Observations
+
+By default, both MC and HMM assign **zero probability** to any state or observation not seen during training. This can cause problems at predict time if the input contains a value the model has never encountered.
+
+Laplace (add-k) smoothing addresses this by adding a pseudocount to every transition or emission so that unseen combinations receive a small non-zero probability.
+
+Set `laplace_factor` in `extraParameters` at build time. A value of `1` is the classic Laplace estimate; higher values apply stronger smoothing.
+
+**For MC** — smooths the transition matrix:
+
+```
+P(next | current) = (count(current → next) + k) / (count(current) + N × k)
+```
+
+where `N` is the number of distinct states and `k` is the Laplace factor.
+
+**For HMM** — smooths both the transition matrix (A) and the emission matrix (B), so an observation at predict time that was never seen during training still receives a non-zero emission probability under every hidden state.
+
+### Sample Request/Response — Markov Chain
+
+```
+Request:
+POST url=”http://charm:8080/symetry/rest/c1/projects/weatherSeq/build?algo=mc&modelid=weatherMC”
+
+Body:
+{
+    “inputAttributes”: [“0”],
+    “targets”: [“1”],
+    “extraParameters”: {}
+}
+
+Response Header:
+Location: http://charm:8080/symetry/rest/c1/jobs/10
+
+Response:
+{“statusCode”:”ACCEPTED”,”statusString”:”Job Created”,”values”:{}}
+
+Job Request:
+GET url=”http://charm:8080/symetry/rest/c1/jobs/10”
+
+Job Response:
+{“statusCode”:”OK”,”statusString”:”Job is finished”,”values”:{}}
+```
+
+### Sample Request/Response — Hidden Markov Model
+
+```
+Request:
+POST url=”http://charm:8080/symetry/rest/c1/projects/activitySeq/build?algo=hmm&modelid=activityHMM”
+
+Body:
+{
+    “inputAttributes”: [“Activity”],
+    “targets”: [“Place”],
+    “extraParameters”: {}
+}
+
+Response Header:
+Location: http://charm:8080/symetry/rest/c1/jobs/11
+
+Response:
+{“statusCode”:”ACCEPTED”,”statusString”:”Job Created”,”values”:{}}
+
+Job Request:
+GET url=”http://charm:8080/symetry/rest/c1/jobs/11”
+
+Job Response:
+{“statusCode”:”OK”,”statusString”:”Job is finished”,”values”:{}}
+```
+
+### Sample Request — with Laplace Smoothing
+
+```
+Body:
+{
+    “inputAttributes”: [“0”],
+    “targets”: [“1”],
+    “extraParameters”: { “laplace_factor”: “1” }
+}
+```
 
 ## KMeans Clustering Model Optimization
 
